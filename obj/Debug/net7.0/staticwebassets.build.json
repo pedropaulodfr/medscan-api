@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ncJlKTwRTq0m/ZfRddraWpuPPx+BGjcJyBfxYEq9Rps=",
+  "Source": "medscanner-api",
+  "BasePath": "_content/medscanner-api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

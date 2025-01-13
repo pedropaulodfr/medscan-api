@@ -1,0 +1,2 @@
+// Atualizar banco de dados
+dotnet ef dbcontext scaffold "Data Source=PEDRO;Initial Catalog=MEDIC_SCAN;Integrated Security=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer --context AppDbContext -o Models --force --no-onconfiguring
