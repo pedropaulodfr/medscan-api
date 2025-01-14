@@ -58,12 +58,12 @@ namespace authentication_jwt.Controllers
                 // Retorna os dados encapsulados em um ActionResult
                 UsuarioAutenticadoDTO usuarioAutenticado = new UsuarioAutenticadoDTO
                 {
-                    Usuario_Id = _user.Id.Value,
+                    UsuarioId = _user.Id.Value,
                     Nome = _user.Nome,
                     Email = _user.Email,
                     Perfil = _user.Perfil,
                     Token = token,
-                    Paciente_Id = _user.PacienteId
+                    PacienteId = _user.PacienteId
                 };
                 
                 return Ok(usuarioAutenticado);

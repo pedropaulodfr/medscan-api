@@ -34,7 +34,9 @@ namespace authentication_jwt.Services
                                                 .ThenInclude(y => y.Unidade)
                                             .AsNoTracking()
                                             .Where(x => x.DataRetorno >= DateTime.Now && x.DataRetorno <= DateTime.Now.AddDays(30)
-                                                    && x.PacienteId == PacienteId)
+                                                    && x.PacienteId == PacienteId
+                                                    && x.Paciente.Deletado != true
+                                                    && x.Medicamento.Inativo != true)
                                             .ToListAsync();
 
             var proximosAoRetorno = dados.Select(y => new CardsDashboardDTO
@@ -53,7 +55,10 @@ namespace authentication_jwt.Services
             var dados = await _dbContext.CartaoControles
                                         .Include(x => x.Medicamento)
                                             .ThenInclude(y => y.Unidade)
-                                        .Where(x => x.PacienteId == PacienteId)
+                                        .Where(x => x.PacienteId == PacienteId 
+                                                && x.Paciente.Deletado != true 
+                                                && x.Medicamento.Inativo != true
+                                                && x.Data <= DateTime.Now )
                                         .AsNoTracking().ToListAsync();
 
             /* CC = Cartão de Controle | R = Receituário

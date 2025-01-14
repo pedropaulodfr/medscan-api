@@ -2,8 +2,8 @@ namespace authentication_jwt.DTO
 {
     public class UsuarioAutenticadoDTO
     {
-        public long Usuario_Id { get; set; }
-        public long? Paciente_Id { get; set; }
+        public long UsuarioId { get; set; }
+        public long? PacienteId { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Perfil { get; set; }

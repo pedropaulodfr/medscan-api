@@ -27,6 +27,8 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Latin1_General_CI_AS");
+
         modelBuilder.Entity<CartaoControle>(entity =>
         {
             entity.ToTable("CartaoControle");

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("medscanner-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1229168084032011b4e3abec2f3d08e3582099f4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1e57d87fb1fd543afd025ade348273e44c529f2")]
 [assembly: System.Reflection.AssemblyProductAttribute("medscanner-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("medscanner-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

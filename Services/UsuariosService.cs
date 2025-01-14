@@ -77,7 +77,7 @@ namespace authentication_jwt.Services
 
         public async Task<List<UsuarioDTO>> GetAll()
         {
-            List<Usuario> usuarios = await _dbContext.Usuarios.AsNoTracking().ToListAsync();
+            List<Usuario> usuarios = await _dbContext.Usuarios.Where(x => x.Deletado != true).AsNoTracking().ToListAsync();
 
             var retorno = usuarios.Select(x => new UsuarioDTO
             {
@@ -125,7 +125,7 @@ namespace authentication_jwt.Services
         {
             try
             {
-                var existUsuario = await _dbContext.Usuarios.Where(u => u.Id == model.Id).FirstOrDefaultAsync();
+                var existUsuario = await _dbContext.Usuarios.Include(x => x.Pacientes).Where(u => u.Id == model.Id).FirstOrDefaultAsync();
                 if (existUsuario == null)
                     throw new ArgumentException("Erro ao atualizar, o usuário não existe!");
 
@@ -137,10 +137,16 @@ namespace authentication_jwt.Services
                 existUsuario.Email = model.Email.Trim();
                 existUsuario.CodigoCadastro = model.CodigoCadastro;
                 existUsuario.Ativo = model.Ativo == "Ativo" ? true : false;
+
                 if(!string.IsNullOrEmpty(model.ImagemPerfil))
                     existUsuario.ImagemPerfil = model.ImagemPerfil;
                 if(!string.IsNullOrEmpty(model.Senha))
                     existUsuario.Senha = model.Senha;
+                
+                if (existUsuario.Perfil == "Paciente" && model.Ativo == "Inativo")
+                    existUsuario.Pacientes.FirstOrDefault().Deletado = true;
+                else if (existUsuario.Perfil == "Paciente" && model.Ativo == "Ativo")
+                    existUsuario.Pacientes.FirstOrDefault().Deletado = false;
                 
                 await _dbContext.SaveChangesAsync();
 
@@ -176,11 +182,14 @@ namespace authentication_jwt.Services
         {
             try
             {
-                var usuario = await _dbContext.Usuarios.Where(u => u.Id == id).FirstOrDefaultAsync();
+                var usuario = await _dbContext.Usuarios.Include(x => x.Pacientes).Where(u => u.Id == id).FirstOrDefaultAsync();
                 if (usuario == null)
                     throw new Exception("O usuário não existe!");
 
-                _dbContext.Remove(usuario);
+                if (usuario.Perfil == "Paciente")
+                    usuario.Pacientes.FirstOrDefault().Deletado = true;
+
+                usuario.Deletado = true;
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
