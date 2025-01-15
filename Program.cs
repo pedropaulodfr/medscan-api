@@ -71,6 +71,7 @@ builder.Services.AddScoped<CepService>();
 builder.Services.AddScoped<PacientesService>();
 builder.Services.AddScoped<AcessoService>();
 builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddScoped<SetupService>();
 
 var app = builder.Build();
 

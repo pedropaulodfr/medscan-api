@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
@@ -166,8 +168,21 @@ namespace authentication_jwt.Services
                 if (existUsuairo == null)
                     throw new ArgumentException("Usuário não localizado!");
 
-                existUsuairo.ImagemPerfil = model.ImagemPerfil;
+
+                // Gerar caminho do arquivo
+                string hash = GerarHashSHA256(GerarSenhaAleatoria());
+                string pastaImagens = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+                string arquivo = Path.Combine(pastaImagens, $"{hash}.png");
+
+                // Criar diretório se não existir
+                if (!Directory.Exists(pastaImagens))
+                    Directory.CreateDirectory(pastaImagens);
+
+                // Converter Base64 para bytes e salvar o arquivo
+                byte[] imagemBytes = Convert.FromBase64String(model.ImagemPerfil);
+                File.WriteAllBytes(arquivo, imagemBytes);
                 
+                existUsuairo.ImagemPerfil = $"{hash}.png";
                 await _dbContext.SaveChangesAsync();
 
                 return model;
@@ -204,6 +219,27 @@ namespace authentication_jwt.Services
             return new string(Enumerable.Repeat(caracteres, 8)
                                         .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        static string GerarHashSHA256(string input)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            // Converter a string de entrada para bytes
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+
+            // Computar o hash
+            byte[] hashBytes = sha256.ComputeHash(bytes);
+
+            // Converter o hash para uma string hexadecimal
+            StringBuilder hashHex = new StringBuilder();
+            foreach (byte b in hashBytes)
+            {
+                hashHex.Append(b.ToString("x2")); // "x2" para formato hexadecimal com dois dígitos
+            }
+
+            return hashHex.ToString();
+        }
+    }
 
     }
 }

@@ -19,16 +19,18 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Receituario> Receituarios { get; set; }
 
+    public virtual DbSet<Setup> Setups { get; set; }
+
     public virtual DbSet<TipoMedicamento> TipoMedicamentos { get; set; }
 
     public virtual DbSet<Unidade> Unidades { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseCollation("Latin1_General_CI_AS");
-
         modelBuilder.Entity<CartaoControle>(entity =>
         {
             entity.ToTable("CartaoControle");
@@ -156,6 +158,18 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.TipoMedicamentoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Receituario_TipoMedicamento");
+        });
+
+        modelBuilder.Entity<Setup>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Setup");
+
+            entity.Property(e => e.CaminhoArquivos).HasColumnType("text");
+            entity.Property(e => e.Urlapi)
+                .HasColumnType("text")
+                .HasColumnName("URLApi");
         });
 
         modelBuilder.Entity<TipoMedicamento>(entity =>
