@@ -82,6 +82,5 @@ namespace authentication_jwt.Utils
                 return "";
             }
         }
-
     }
 }

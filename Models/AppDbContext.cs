@@ -13,6 +13,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<CartaoControle> CartaoControles { get; set; }
 
+    public virtual DbSet<Email> Emails { get; set; }
+
     public virtual DbSet<Medicamento> Medicamentos { get; set; }
 
     public virtual DbSet<Paciente> Pacientes { get; set; }
@@ -52,6 +54,23 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.PacienteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartaoControle_Pacientes");
+        });
+
+        modelBuilder.Entity<Email>(entity =>
+        {
+            entity.Property(e => e.Corpo).HasColumnType("text");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Identificacao)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Perfil)
+                .HasMaxLength(13)
+                .IsUnicode(false);
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(100)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Medicamento>(entity =>
@@ -167,6 +186,22 @@ public partial class AppDbContext : DbContext
                 .ToTable("Setup");
 
             entity.Property(e => e.CaminhoArquivos).HasColumnType("text");
+            entity.Property(e => e.SmtpHost)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("smtpHost");
+            entity.Property(e => e.SmtpPassword)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("smtpPassword");
+            entity.Property(e => e.SmtpPort)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("smtpPort");
+            entity.Property(e => e.SmtpUser)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("smtpUser");
             entity.Property(e => e.Urlapi)
                 .HasColumnType("text")
                 .HasColumnName("URLApi");

@@ -12,11 +12,12 @@ namespace authentication_jwt.Services
     public class PacientesService
     {
         private readonly AppDbContext _dbContext;
+        private readonly EmailService _emailService;
 
-        // Construtor para injetar o AppDbContext
-        public PacientesService(AppDbContext dbContext, UsuariosService usuariosService)
+        public PacientesService(AppDbContext dbContext, EmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public async Task<PacienteDTO> Get(long Id)
@@ -132,8 +133,10 @@ namespace authentication_jwt.Services
                     Usuarios = usuario
                 };
 
+
                 await _dbContext.AddAsync(paciente);
                 await _dbContext.SaveChangesAsync();
+                await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
 
                 return model;
             }

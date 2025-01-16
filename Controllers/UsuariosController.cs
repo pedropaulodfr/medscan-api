@@ -96,9 +96,9 @@ namespace authentication_jwt.Controllers
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _usuariosService.Delete(id);  // Chama o método no serviço
             try
             {
+                await _usuariosService.Delete(id);  // Chama o método no serviço
                 return Ok();
             }
             catch (Exception ex)
@@ -106,5 +106,21 @@ namespace authentication_jwt.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         } 
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("esqueceuSenha")]
+        public async Task<ActionResult> EsqueceuSenha([FromBody] UsuarioDTO model)
+        {
+            try
+            {
+                await _usuariosService.EsqueceuSenha(model.Email);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

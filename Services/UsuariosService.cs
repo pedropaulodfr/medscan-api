@@ -14,11 +14,13 @@ namespace authentication_jwt.Services
     public class UsuariosService
     {
         private readonly AppDbContext _dbContext;
+        private readonly EmailService _emailService;
 
         // Construtor para injetar o AppDbContext
-        public UsuariosService(AppDbContext dbContext)
+        public UsuariosService(AppDbContext dbContext, EmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public async Task<UsuarioDTO> Get(long id)
@@ -113,9 +115,11 @@ namespace authentication_jwt.Services
                     Ativo = model.Ativo == "Ativo" ? true : false,
                     Senha = Funcoes.GerarSenhaAleatoria()
                 };
+                
 
                 await _dbContext.AddAsync(usuario);
                 await _dbContext.SaveChangesAsync();
+                await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
 
                 return model;
             }
@@ -192,7 +196,7 @@ namespace authentication_jwt.Services
             {
                 var usuario = await _dbContext.Usuarios.Include(x => x.Pacientes).Where(u => u.Id == id).FirstOrDefaultAsync();
                 if (usuario == null)
-                    throw new Exception("O usuário não existe!");
+                    throw new ArgumentException("O usuário não existe!");
 
                 if (usuario.Perfil == "Paciente")
                     usuario.Pacientes.FirstOrDefault().Deletado = true;
@@ -202,7 +206,26 @@ namespace authentication_jwt.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message ?? ex.InnerException.ToString());
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
+            }
+        }
+
+        public async Task EsqueceuSenha(string email)
+        {
+            try
+            {
+                var usuario = await _dbContext.Usuarios.Where(x => x.Email == email).FirstOrDefaultAsync();
+                if (usuario == null)
+                    throw new ArgumentException("Usuário não localizado!");
+
+                //usuario.Senha = Funcoes.GerarSenhaAleatoria();
+                //await _dbContext.SaveChangesAsync();
+
+                await _emailService.EnviarEmailEsqueceuSenha(usuario.Email, usuario.Nome, usuario.Senha);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
             }
         }
     }
