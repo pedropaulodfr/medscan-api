@@ -169,11 +169,8 @@ namespace authentication_jwt.Services
                 if (existUsuairo == null)
                     throw new ArgumentException("Usuário não localizado!");
 
-                string hash = Funcoes.GerarHashSHA256(null);
-                string arquivo = $"{hash}.png";
-
                 var funcoes = new Funcoes();
-                var resultado = await funcoes.UploadImagem(model.ImagemPerfil, arquivo);
+                var resultado = await funcoes.UploadImagem(model.ImagemPerfil);
 
                 if(string.IsNullOrEmpty(resultado))
                     throw new ArgumentException("Erro ao fazer upload da imagem!");

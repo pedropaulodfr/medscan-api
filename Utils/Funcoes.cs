@@ -37,7 +37,7 @@ namespace authentication_jwt.Utils
                 return hashHex.ToString();
             }
         }
-        public async Task<string> UploadImagem(string imagemBase64, string nome)
+        public async Task<string> UploadImagem(string imagemBase64)
         {
             try
             {
