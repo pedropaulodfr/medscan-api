@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
+using authentication_jwt.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace authentication_jwt.Services
@@ -11,13 +12,11 @@ namespace authentication_jwt.Services
     public class PacientesService
     {
         private readonly AppDbContext _dbContext;
-        private readonly UsuariosService _usuariosService;
 
         // Construtor para injetar o AppDbContext
         public PacientesService(AppDbContext dbContext, UsuariosService usuariosService)
         {
             _dbContext = dbContext;
-            _usuariosService = usuariosService;
         }
 
         public async Task<PacienteDTO> Get(long Id)
@@ -109,7 +108,7 @@ namespace authentication_jwt.Services
                     Nome = model.Nome,
                     Email = model.Email.Trim(),
                     Ativo = true,
-                    Senha = _usuariosService.GerarSenhaAleatoria()
+                    Senha = Funcoes.GerarSenhaAleatoria()
                 };
 
                 Paciente paciente = new Paciente()    
