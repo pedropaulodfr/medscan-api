@@ -62,11 +62,9 @@ namespace authentication_jwt.Controllers
         [Route("estoqueMedicamentos/{PacienteId?}")]
         public async Task<ActionResult> EstoqueMedicamentos(long PacienteId)
         {
-
             try
             {
-                await _dashboardService.EstoqueMedicamentos(PacienteId);
-                return Ok();
+                return StatusCode(200, await _dashboardService.EstoqueMedicamentos(PacienteId));
             }
             catch (Exception ex)
             {
