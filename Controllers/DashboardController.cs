@@ -17,14 +17,12 @@ namespace authentication_jwt.Controllers
         }
 
         [HttpGet]
-        [Route("cartaoControle/{PacienteId}")]
+        [Route("cartaoControle/{PacienteId?}")]
         public async Task<ActionResult> CartaoControle(long PacienteId)
         {
-            var result = await _dashboardService.CartaoControle(PacienteId);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return StatusCode(200, await _dashboardService.CartaoControle(PacienteId));
             }
             catch (Exception ex)
             {
@@ -33,14 +31,12 @@ namespace authentication_jwt.Controllers
         }
         
         [HttpGet]
-        [Route("proximoRetorno/{PacienteId}")]
+        [Route("proximoRetorno/{PacienteId?}")]
         public async Task<ActionResult> CardProximoAoRetorno(long PacienteId)
         {
-            var result = await _dashboardService.CardProximoRetorno(PacienteId);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return StatusCode(200, await _dashboardService.CardProximoRetorno(PacienteId));
             }
             catch (Exception ex)
             {
@@ -49,14 +45,28 @@ namespace authentication_jwt.Controllers
         }
         
         [HttpGet]
-        [Route("estoqueMedicamentos/{PacienteId}")]
+        [Route("qntMedicamentosPaciente/{PacienteId?}")]
+        public async Task<ActionResult> CardQntMedicamentosPaciente(long? PacienteId)
+        {
+            try
+            {
+                return StatusCode(200, await _dashboardService.CardQntMedicamentosPaciente(PacienteId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = "Erro ao obter dados: " + ex });
+            }
+        }
+        
+        [HttpGet]
+        [Route("estoqueMedicamentos/{PacienteId?}")]
         public async Task<ActionResult> EstoqueMedicamentos(long PacienteId)
         {
-            var result = await _dashboardService.EstoqueMedicamentos(PacienteId);  // Chama o método no serviço
 
             try
             {
-                return Ok(result);
+                await _dashboardService.EstoqueMedicamentos(PacienteId);
+                return Ok();
             }
             catch (Exception ex)
             {

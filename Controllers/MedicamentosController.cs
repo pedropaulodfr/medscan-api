@@ -18,15 +18,13 @@ namespace authentication_jwt.Controllers
         [Route("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            var result = await _medicamentosService.GetAll();  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return StatusCode(200, await _medicamentosService.GetAll());
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao salvar: " + ex });
+                return BadRequest(new { message = ex });
             }
         }
         
@@ -34,15 +32,13 @@ namespace authentication_jwt.Controllers
         [Route("insert")]
         public async Task<ActionResult> Insert([FromBody] MedicamentoDTO model)
         {
-            var result = await _medicamentosService.Insert(model);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return StatusCode(200, await _medicamentosService.Insert(model));
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao salvar: " + ex });
+                return BadRequest(new { message = ex });
             }
         }
 
@@ -50,15 +46,13 @@ namespace authentication_jwt.Controllers
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] MedicamentoDTO model)
         {
-            var result = await _medicamentosService.Update(model);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return StatusCode(200,  await _medicamentosService.Update(model));
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao atualizar: " + ex });
+                return BadRequest(new { message = ex });
             }
         }
         
@@ -66,15 +60,14 @@ namespace authentication_jwt.Controllers
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _medicamentosService.Delete(id);  // Chama o método no serviço
-
             try
             {
-                return Ok(new { mensagem = "Medicamento deletado com sucesso!" });
+                await _medicamentosService.Delete(id); 
+                return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao salvar: " + ex });
+                return BadRequest(new { message = ex });
             }
         }
     }

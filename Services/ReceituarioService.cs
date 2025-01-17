@@ -97,6 +97,16 @@ namespace authentication_jwt.Services
                 if (paciente == null)
                     throw new Exception("Paciente não encontrado!");
 
+                var receituarioExist = await _dbContext.Receituarios.Where(x => 
+                                                x.MedicamentoId == model.Medicamento.Id 
+                                                && x.TipoMedicamentoId == model.Medicamento.TipoMedicamentoId.Value
+                                                && x.Medicamento.UnidadeId == model.Medicamento.UnidadeId
+                                                && x.PacienteId == paciente.Id)
+                                                .AsNoTracking()
+                                                .FirstOrDefaultAsync();
+                if (receituarioExist != null)
+                    throw new Exception("Já existe um receituário cadastrado para este medicamento!");
+
                 Receituario receituario = new Receituario()
                 {
                     Frequencia = model.Frequencia,

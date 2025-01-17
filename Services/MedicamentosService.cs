@@ -48,7 +48,7 @@ namespace authentication_jwt.Services
             try
             {
                 if (model.Id != 0)
-                    throw new Exception("Erro ao salvar, o medicamento já existe!");
+                    throw new ArgumentException("Erro ao salvar, o medicamento já existe!");
 
                 Medicamento medicamento = new Medicamento()
                 {
@@ -68,7 +68,7 @@ namespace authentication_jwt.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message ?? ex.InnerException.ToString());
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
             }
         }
 
@@ -78,7 +78,7 @@ namespace authentication_jwt.Services
             {
                 var existMedicamento = await _dbContext.Medicamentos.Where(m => m.Id == model.Id).FirstOrDefaultAsync();
                 if (existMedicamento == null)
-                    throw new Exception("Erro ao atualizar, o medicamento não existe!");
+                    throw new ArgumentException("Erro ao atualizar, o medicamento não existe!");
                 
                 existMedicamento.Identificacao = model.Identificacao;
                 existMedicamento.Descricao = model.Descricao;
@@ -94,17 +94,25 @@ namespace authentication_jwt.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message ?? ex.InnerException.ToString());
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
             }
         }
         public async Task Delete(long id)
         {
-            var medicamento = await _dbContext.Medicamentos.Where(m => m.Id == id).FirstOrDefaultAsync();
-            if (medicamento == null)
-                throw new Exception("Erro ao deletar, o medicamento não existe!");
+            try
+            {
+                var medicamento = await _dbContext.Medicamentos.Include(x => x.Receituarios).Where(m => m.Id == id).FirstOrDefaultAsync();
+                if (medicamento == null)
+                    throw new Exception("Erro ao deletar, o medicamento não existe!");
 
-            _dbContext.Remove(medicamento);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.RemoveRange(medicamento.Receituarios);
+                _dbContext.Remove(medicamento);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
+            }
         }
     }
 }
