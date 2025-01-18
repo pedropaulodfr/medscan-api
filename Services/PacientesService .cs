@@ -99,46 +99,51 @@ namespace authentication_jwt.Services
         {
             try
             {
-                var existPaciente = await _dbContext.Pacientes.Where(x => x.Email == model.Email.Trim() || x.Cpf == model.Cpf).FirstOrDefaultAsync();
-                if(existPaciente != null)
-                    throw new ArgumentException("Já existe um paciente cadastrado com esse E-mail ou CPF!");
-
-                Usuario usuario = new Usuario()
+                using (var transaction = _dbContext.Database.BeginTransaction())
                 {
-                    Perfil = "Paciente",
-                    Nome = model.Nome,
-                    Email = model.Email.Trim(),
-                    Ativo = true,
-                    Senha = Funcoes.GerarSenhaAleatoria()
-                };
+                    var existPaciente = await _dbContext.Pacientes.Where(x => (x.Email == model.Email.Trim() || x.Cpf == model.Cpf) && x.Deletado != true).FirstOrDefaultAsync();
+                    if(existPaciente != null)
+                        throw new ArgumentException("Já existe um paciente cadastrado com esse E-mail ou CPF!");
 
-                Paciente paciente = new Paciente()    
-                {
-                    Id = model.Id,
-                    Nome = model.Nome,
-                    NomeCompleto = model.NomeCompleto,
-                    Email = model.Email,
-                    Cpf = model.Cpf.Replace(".", "").Replace("-", ""),
-                    DataNascimento = model.DataNascimento,
-                    Logradouro = model.Logradouro,
-                    Bairro = model.Bairro,
-                    Complemento = model.Complemento,
-                    Numero = model.Numero,
-                    Cidade = model.Cidade,
-                    Uf = model.Uf,
-                    Cep = model.Cep,
-                    Cns = model.Cns,
-                    PlanoSaude = model.PlanoSaude,
-                    UsuariosId = model.UsuariosId,
-                    Usuarios = usuario
-                };
+                    Usuario usuario = new Usuario()
+                    {
+                        Perfil = "Paciente",
+                        Nome = model.Nome,
+                        Email = model.Email.Trim(),
+                        Ativo = true,
+                        Senha = Funcoes.GerarSenhaAleatoria()
+                    };
+
+                    Paciente paciente = new Paciente()    
+                    {
+                        Id = model.Id,
+                        Nome = model.Nome,
+                        NomeCompleto = model.NomeCompleto,
+                        Email = model.Email,
+                        Cpf = model.Cpf.Replace(".", "").Replace("-", ""),
+                        DataNascimento = model.DataNascimento,
+                        Logradouro = model.Logradouro,
+                        Bairro = model.Bairro,
+                        Complemento = model.Complemento,
+                        Numero = model.Numero,
+                        Cidade = model.Cidade,
+                        Uf = model.Uf,
+                        Cep = model.Cep,
+                        Cns = model.Cns,
+                        PlanoSaude = model.PlanoSaude,
+                        UsuariosId = model.UsuariosId,
+                        Usuarios = usuario
+                    };
 
 
-                await _dbContext.AddAsync(paciente);
-                await _dbContext.SaveChangesAsync();
-                await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
+                    await _dbContext.AddAsync(paciente);
+                    await _dbContext.SaveChangesAsync();
+                    await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
 
-                return model;
+                    transaction.Commit();
+
+                    return model;
+                }
             }
             catch (Exception ex)
             {

@@ -101,27 +101,32 @@ namespace authentication_jwt.Services
         {
             try
             {
-                var existUsuario = await _dbContext.Usuarios.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
-                if(existUsuario != null)
-                    throw new ArgumentException("Já existe um usuário cadastrado com esse e-mail!");
-
-                Usuario usuario = new Usuario()
+                using (var transaction = _dbContext.Database.BeginTransaction())
                 {
-                    Perfil = model.Perfil,
-                    Nome = model.Nome,
-                    Email = model.Email.Trim(),
-                    ImagemPerfil = model.ImagemPerfil,
-                    CodigoCadastro = model.CodigoCadastro,
-                    Ativo = model.Ativo == "Ativo" ? true : false,
-                    Senha = Funcoes.GerarSenhaAleatoria()
-                };
-                
+                    var existUsuario = await _dbContext.Usuarios.Where(x => x.Email == model.Email.Trim() && x.Deletado != true).FirstOrDefaultAsync();
+                    if(existUsuario != null)
+                        throw new ArgumentException("Já existe um usuário cadastrado com esse e-mail!");
 
-                await _dbContext.AddAsync(usuario);
-                await _dbContext.SaveChangesAsync();
-                await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
+                    Usuario usuario = new Usuario()
+                    {
+                        Perfil = model.Perfil,
+                        Nome = model.Nome,
+                        Email = model.Email.Trim(),
+                        ImagemPerfil = model.ImagemPerfil,
+                        CodigoCadastro = model.CodigoCadastro,
+                        Ativo = model.Ativo == "Ativo" ? true : false,
+                        Senha = Funcoes.GerarSenhaAleatoria()
+                    };
+                    
 
-                return model;
+                    await _dbContext.AddAsync(usuario);
+                    await _dbContext.SaveChangesAsync();
+                    await _emailService.EnviarEmailNovoCadastro(usuario.Email, usuario.Nome, usuario.Senha);
+
+                    transaction.Commit();
+                    
+                    return model;
+                }
             }
             catch (Exception ex)
             {
@@ -136,7 +141,7 @@ namespace authentication_jwt.Services
                 if (existUsuario == null)
                     throw new ArgumentException("Erro ao atualizar, o usuário não existe!");
 
-                var existUsuarioEmail = await _dbContext.Usuarios.Where(x => x.Email == model.Email.Trim() && x.Id != model.Id).FirstOrDefaultAsync();
+                var existUsuarioEmail = await _dbContext.Usuarios.Where(x => x.Email == model.Email.Trim() && x.Id != model.Id && x.Deletado != true).FirstOrDefaultAsync();
                 if (existUsuarioEmail != null)
                     throw new ArgumentException("Já existe um usuário cadastrado com esse e-mail!");
 
@@ -153,7 +158,12 @@ namespace authentication_jwt.Services
                 if (existUsuario.Perfil == "Paciente" && model.Ativo == "Inativo")
                     existUsuario.Pacientes.FirstOrDefault().Deletado = true;
                 else if (existUsuario.Perfil == "Paciente" && model.Ativo == "Ativo")
+                {
+                    var existPaciente = await _dbContext.Pacientes.Where(x => x.Email == model.Email && x.UsuariosId != existUsuario.Id && x.Deletado == false).FirstOrDefaultAsync();
+                    if(existPaciente != null)
+                        throw new ArgumentException("Já existe um paciente cadastrado com esse E-mail ou CPF!");
                     existUsuario.Pacientes.FirstOrDefault().Deletado = false;
+                }
                 
                 await _dbContext.SaveChangesAsync();
 
