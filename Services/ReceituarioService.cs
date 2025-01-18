@@ -100,7 +100,6 @@ namespace authentication_jwt.Services
                 var receituarioExist = await _dbContext.Receituarios.Where(x => 
                                                 x.MedicamentoId == model.Medicamento.Id 
                                                 && x.TipoMedicamentoId == model.Medicamento.TipoMedicamentoId.Value
-                                                && x.Medicamento.UnidadeId == model.Medicamento.UnidadeId
                                                 && x.PacienteId == paciente.Id)
                                                 .AsNoTracking()
                                                 .FirstOrDefaultAsync();

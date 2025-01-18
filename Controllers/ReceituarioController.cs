@@ -25,7 +25,7 @@ namespace authentication_jwt.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao obter dados: " + ex });
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -39,7 +39,7 @@ namespace authentication_jwt.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao obter dados: " + ex });
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -53,7 +53,7 @@ namespace authentication_jwt.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao salvar: " + ex });
+                return BadRequest(new { message = ex.Message });
             }
         }
         
@@ -67,7 +67,7 @@ namespace authentication_jwt.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao atualizar: " + ex });
+                return BadRequest(new { message = ex.Message });
             }
         }
         
@@ -75,14 +75,14 @@ namespace authentication_jwt.Controllers
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _receituarioService.Delete(id);  // Chama o método no serviço
+            await _receituarioService.Delete(id); 
             try
             {
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "Erro ao deletar: " + ex });
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

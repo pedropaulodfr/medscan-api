@@ -5,11 +5,11 @@ namespace authentication_jwt.Models;
 
 public partial class Setup
 {
+    public long Id { get; set; }
+
     public string? Urlapi { get; set; }
 
-    public string? CaminhoArquivos { get; set; }
-
-    public bool? UsarCodigoCadastro { get; set; }
+    public string? Urlweb { get; set; }
 
     public string? SmtpHost { get; set; }
 
@@ -18,4 +18,8 @@ public partial class Setup
     public string? SmtpUser { get; set; }
 
     public string? SmtpPassword { get; set; }
+
+    public string? CaminhoArquivos { get; set; }
+
+    public bool? UsarCodigoCadastro { get; set; }
 }

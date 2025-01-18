@@ -181,9 +181,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Setup>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Setup");
+            entity.ToTable("Setup");
 
             entity.Property(e => e.CaminhoArquivos).HasColumnType("text");
             entity.Property(e => e.SmtpHost)
@@ -203,8 +201,13 @@ public partial class AppDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("smtpUser");
             entity.Property(e => e.Urlapi)
-                .HasColumnType("text")
+                .HasMaxLength(200)
+                .IsUnicode(false)
                 .HasColumnName("URLApi");
+            entity.Property(e => e.Urlweb)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("URLWeb");
         });
 
         modelBuilder.Entity<TipoMedicamento>(entity =>
