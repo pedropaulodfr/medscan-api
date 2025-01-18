@@ -31,6 +31,21 @@ namespace authentication_jwt.Controllers
         
         [Authorize(Policy = "AdminPolicy")]
         [HttpPut]
+        [Route("updateSMTP")]
+        public async Task<ActionResult> UpdateSMTP([FromBody] SetupDTO model)
+        {
+            try
+            {
+                return StatusCode(200, await _setupService.UpdateSMTP(model));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPut]
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] SetupDTO model)
         {

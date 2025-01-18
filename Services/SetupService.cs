@@ -28,6 +28,28 @@ namespace authentication_jwt.Services
             }).FirstOrDefaultAsync();
         }
 
+        public async Task<SetupDTO> UpdateSMTP(SetupDTO model)
+        {
+            try
+            {
+                var setup = await _dbContext.Setups.FirstOrDefaultAsync();
+                if (setup == null)
+                    throw new ArgumentException("Setup não encontrado!");
+
+                setup.SmtpHost = model.SmtpHost;
+                setup.SmtpPort = model.SmtpPort;
+                setup.SmtpUser = model.SmtpUser;
+                setup.SmtpPassword = model.SmtpPassword;
+
+                await _dbContext.SaveChangesAsync();
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message ?? ex.InnerException.ToString());
+            }
+        }
         public async Task<SetupDTO> Update(SetupDTO model)
         {
             try
