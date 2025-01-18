@@ -25,13 +25,11 @@ builder.Services.AddDbContextPool<AppDbContext>((serviceProvider, options) =>
 
 string MyAllowSpecificOrigins = "_myAllowspecificOrigins";
 builder.Services.AddCors(options => {
-    options.AddPolicy(MyAllowSpecificOrigins,
-    builder => {
-        builder.AllowAnyOrigin();
+    options.AddPolicy(MyAllowSpecificOrigins, builder => 
+    {
+        builder.WithOrigins("https://medscan-web.fly.dev", "http://localhost:3000");
         builder.AllowAnyHeader();
         builder.AllowAnyMethod();
-        builder.SetIsOriginAllowed(origin => true);
-        builder.WithExposedHeaders("X-Pagination");
     });
 });
 
