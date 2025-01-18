@@ -9,12 +9,19 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Database App
-string sqlServerConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContextPool<AppDbContext>(options =>
-                options.UseSqlServer(sqlServerConnection));
+builder.Services.AddDbContextPool<AppDbContext>((serviceProvider, options) =>
+{
+    var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+    if(httpContextAccessor.HttpContext?.Request.Headers["TenantId"].FirstOrDefault() != null)
+    {
+        string sqlServerConnection = builder.Configuration.GetConnectionString(httpContextAccessor.HttpContext.Request.Headers["TenantId"].FirstOrDefault());
+        options.UseSqlServer(sqlServerConnection);
+    }
+});
 
 string MyAllowSpecificOrigins = "_myAllowspecificOrigins";
 builder.Services.AddCors(options => {
@@ -28,7 +35,6 @@ builder.Services.AddCors(options => {
     });
 });
 
-builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 
