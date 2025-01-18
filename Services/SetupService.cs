@@ -21,6 +21,10 @@ namespace authentication_jwt.Services
                 Urlapi = x.Urlapi,
                 CaminhoArquivos = x.CaminhoArquivos,
                 UsarCodigoCadastro = x.UsarCodigoCadastro,
+                SmtpHost = x.SmtpHost,
+                SmtpPort = x.SmtpPort,
+                SmtpUser = x.SmtpUser,
+                SmtpPassword = x.SmtpPassword
             }).FirstOrDefaultAsync();
         }
 

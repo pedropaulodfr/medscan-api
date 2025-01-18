@@ -12,5 +12,13 @@ namespace authentication_jwt.DTO
         public string? CaminhoArquivos { get; set; }
 
         public bool? UsarCodigoCadastro { get; set; }
+        
+        public string? SmtpHost { get; set; }
+
+        public string? SmtpPort { get; set; }
+
+        public string? SmtpUser { get; set; }
+
+        public string? SmtpPassword { get; set; }
     }
 }

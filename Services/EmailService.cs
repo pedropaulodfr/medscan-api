@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Net;
 using authentication_jwt.Models;
 using Microsoft.EntityFrameworkCore;
+using authentication_jwt.DTO;
 
 
 namespace authentication_jwt.Services
@@ -19,10 +20,53 @@ namespace authentication_jwt.Services
             _dbContext = dbContext;
         }
 
+        public async Task<List<EmailDTO>> GetAll()
+        {
+            var emails = await _dbContext.Emails.ToListAsync();
+            var retorno = emails.Select(e => new EmailDTO
+            {
+                Id = e.Id,
+                Identificacao = e.Identificacao,
+                Perfil = e.Perfil,
+                Descricao = e.Descricao,
+                Titulo = e.Titulo,
+                Corpo = e.Corpo,
+                Ativo = e.Ativo,
+                Status = e.Ativo == true ? "Ativo" : "Inativo"
+            }).ToList();
+
+            return retorno;
+        }
+
+        public async Task<EmailDTO> Update(EmailDTO model)
+        {
+            try
+            {
+                var email = await _dbContext.Emails.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                if (email == null)
+                    throw new ArgumentException("Email não encontrado!");
+
+                email.Identificacao = model.Identificacao;
+                email.Perfil = model.Perfil;
+                email.Descricao = model.Descricao;
+                email.Titulo = model.Titulo;
+                email.Corpo = model.Corpo;
+                email.Ativo = model.Status == "Ativo" ? true : false;
+
+                await _dbContext.SaveChangesAsync();
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
+            }
+        }
+
         public async Task EnviarEmailNovoCadastro(string email, string nome, string senha)
         {
             var setup = await _dbContext.Setups.FirstOrDefaultAsync();
-            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "NovoCadastro").FirstOrDefaultAsync();
+            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "NovoCadastro" && x.Ativo == true).FirstOrDefaultAsync();
             if (setupEmail == null)
                 throw new ArgumentException("Configuração de email não encontrada");
 
@@ -41,7 +85,7 @@ namespace authentication_jwt.Services
         public async Task EnviarEmailEsqueceuSenha(string email, string nome, string senha)
         {
             var setup = await _dbContext.Setups.FirstOrDefaultAsync();
-            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "RecuperarSenha").FirstOrDefaultAsync();
+            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "RecuperarSenha" && x.Ativo == true).FirstOrDefaultAsync();
             if (setupEmail == null)
                 throw new ArgumentException("Configuração de email não encontrada");
 
