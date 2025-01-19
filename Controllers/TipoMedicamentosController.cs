@@ -16,6 +16,7 @@ namespace authentication_jwt.Controllers
             _tipoMedicamentoService = tipoMedicamentoService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getAll")]
         public async Task<ActionResult> GetAll()

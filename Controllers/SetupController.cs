@@ -15,7 +15,7 @@ namespace authentication_jwt.Controllers
         {
             _setupService = setupService;
         }
-
+        
         [HttpGet]
         public async Task<ActionResult> Get()
         {

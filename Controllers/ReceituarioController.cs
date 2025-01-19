@@ -1,5 +1,6 @@
 using authentication_jwt.DTO;
 using authentication_jwt.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace authentication_jwt.Controllers
@@ -15,6 +16,7 @@ namespace authentication_jwt.Controllers
             _receituarioService = receituarioService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("get/{PacienteId}")]
         public async Task<ActionResult> Get(long PacienteId)
@@ -29,6 +31,7 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         [Route("getAll")]
         public async Task<ActionResult> GetAll()
@@ -43,6 +46,7 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route("insert")]
         public async Task<ActionResult> Insert([FromBody] ReceituarioDTO model)
@@ -57,6 +61,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpPut]
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] ReceituarioDTO model)
@@ -71,6 +76,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpDelete]
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)

@@ -61,7 +61,6 @@ namespace authentication_jwt.Controllers
             }
         }
         
-        //[Authorize(Policy = "AdminPolicy")]
         [Authorize]
         [HttpPut]
         [Route("update")]

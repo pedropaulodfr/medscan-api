@@ -16,6 +16,7 @@ namespace authentication_jwt.Controllers
             _unidadesService = unidadesService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getAll")]
         public async Task<ActionResult> GetAll()

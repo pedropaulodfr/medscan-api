@@ -1,6 +1,7 @@
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
 using authentication_jwt.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace authentication_jwt.Controllers
@@ -16,6 +17,7 @@ namespace authentication_jwt.Controllers
             _dashboardService = dashboardService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("cartaoControle/{PacienteId?}")]
         public async Task<ActionResult> CartaoControle(long PacienteId)
@@ -30,6 +32,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpGet]
         [Route("proximoRetorno/{PacienteId?}")]
         public async Task<ActionResult> CardProximoAoRetorno(long PacienteId)
@@ -44,6 +47,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpGet]
         [Route("qntMedicamentosPaciente/{PacienteId?}")]
         public async Task<ActionResult> CardQntMedicamentosPaciente(long? PacienteId)
@@ -58,6 +62,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpGet]
         [Route("estoqueMedicamentos/{PacienteId?}")]
         public async Task<ActionResult> EstoqueMedicamentos(long PacienteId)

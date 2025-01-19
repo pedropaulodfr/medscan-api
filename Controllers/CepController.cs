@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using authentication_jwt.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace authentication_jwt.Controllers
@@ -18,6 +19,7 @@ namespace authentication_jwt.Controllers
             _cepService = cepService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getEndereco/{CEP}")]
         public async Task<ActionResult> GetEndereco(string CEP)

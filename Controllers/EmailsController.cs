@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using authentication_jwt.DTO;
 using authentication_jwt.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace authentication_jwt.Controllers
@@ -19,6 +20,7 @@ namespace authentication_jwt.Controllers
             _emailService = emailService;
         }
 
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         [Route("getAll")]
         public async Task<ActionResult> GetAll()
@@ -33,6 +35,7 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminPolicy")]
         [HttpPut]
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] EmailDTO model)

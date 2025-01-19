@@ -15,6 +15,7 @@ namespace authentication_jwt.Controllers
             _cartaoControleService = cartaoControleService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("get/{PacienteId}")]
         public async Task<ActionResult> Get(long PacienteId)
@@ -48,6 +49,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpPost]
         [Route("insert")]
         public async Task<ActionResult> Insert([FromBody] CartaoControleDTO model)
@@ -64,6 +66,7 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut]
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] CartaoControleDTO model)
@@ -80,6 +83,7 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
         [HttpDelete]
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)
