@@ -26,7 +26,31 @@ appsettings.json
 
 /medscanner-api/out
 /medscanner-api/obj
+medscanner-api/bin
+medscanner-api/obj
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+Itinero/
+
+
+# Arquivo de configuração
+appsettings.json
