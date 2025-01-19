@@ -15,12 +15,14 @@ namespace authentication_jwt.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly EmailService _emailService;
+        private readonly AcessoService _acessoService;
 
         // Construtor para injetar o AppDbContext
-        public UsuariosService(AppDbContext dbContext, EmailService emailService)
+        public UsuariosService(AppDbContext dbContext, EmailService emailService, AcessoService acessoService)
         {
             _dbContext = dbContext;
             _emailService = emailService;
+            _acessoService = acessoService; 
         }
 
         public async Task<UsuarioDTO> Get(long id)
@@ -68,7 +70,8 @@ namespace authentication_jwt.Services
                     ImagemPerfil = usuario.ImagemPerfil,
                     CodigoCadastro = usuario.CodigoCadastro,
                     Ativo = usuario.Ativo ? "Ativo" : "Inativo",
-                    Paciente = objPaciente
+                    Paciente = objPaciente,
+                    Master = usuario.Master
                 };
 
                 return retorno;
@@ -92,7 +95,8 @@ namespace authentication_jwt.Services
                 Email = x.Email,
                 ImagemPerfil = x.ImagemPerfil,
                 CodigoCadastro = x.CodigoCadastro,
-                Ativo = x.Ativo ? "Ativo" : "Inativo"
+                Ativo = x.Ativo ? "Ativo" : "Inativo",
+                Master = x.Master
             }).ToList();
 
             return retorno;
@@ -107,6 +111,11 @@ namespace authentication_jwt.Services
                     if(existUsuario != null)
                         throw new ArgumentException("Já existe um usuário cadastrado com esse e-mail!");
 
+                    if( model.Perfil == null && _acessoService.Perfil == "Admin")
+                        model.Perfil = "Admin";
+                    else 
+                        model.Perfil = "Paciente";
+
                     Usuario usuario = new Usuario()
                     {
                         Perfil = model.Perfil,
@@ -115,7 +124,8 @@ namespace authentication_jwt.Services
                         ImagemPerfil = model.ImagemPerfil,
                         CodigoCadastro = model.CodigoCadastro,
                         Ativo = model.Ativo == "Ativo" ? true : false,
-                        Senha = Funcoes.GerarSenhaAleatoria()
+                        Senha = Funcoes.GerarSenhaAleatoria(),
+                        Master = model.Master
                     };
                     
 
@@ -149,6 +159,7 @@ namespace authentication_jwt.Services
                 existUsuario.Email = model.Email.Trim();
                 existUsuario.CodigoCadastro = model.CodigoCadastro;
                 existUsuario.Ativo = model.Ativo == "Ativo" ? true : false;
+                existUsuario.Master = model.Master;
 
                 if(!string.IsNullOrEmpty(model.ImagemPerfil))
                     existUsuario.ImagemPerfil = model.ImagemPerfil;

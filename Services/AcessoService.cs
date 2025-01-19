@@ -13,6 +13,7 @@ namespace authentication_jwt.Services
         public long UsuarioId { get; }
         public string Email { get; }
         public string Perfil { get; }
+        public string? Master { get; }
         public long? PacienteId { get; }
 
         public AcessoService(AppDbContext dbContext, IHttpContextAccessor acesso)
@@ -28,6 +29,8 @@ namespace authentication_jwt.Services
                 PacienteId = long.Parse(_acesso.HttpContext?.User.FindFirst("PacienteId")?.Value);
             if(!string.IsNullOrEmpty(_acesso.HttpContext?.User.FindFirst("UsuarioId")?.Value))
                 UsuarioId = long.Parse(_acesso.HttpContext?.User.FindFirst("UsuarioId")?.Value);
+            if(!string.IsNullOrEmpty(_acesso.HttpContext?.User.FindFirst("Master")?.Value))
+                Master = _acesso.HttpContext?.User.FindFirst("Master")?.Value.ToString();
         }
     }
 }

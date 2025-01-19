@@ -149,8 +149,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Usuarios).WithMany(p => p.Pacientes)
                 .HasForeignKey(d => d.UsuariosId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Pacientes_Usuarios");
+                .HasConstraintName("FK_Pacientes_Usuario");
         });
 
         modelBuilder.Entity<Receituario>(entity =>

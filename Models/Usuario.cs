@@ -23,5 +23,7 @@ public partial class Usuario
 
     public bool? Deletado { get; set; }
 
+    public bool? Master { get; set; }
+
     public virtual ICollection<Paciente> Pacientes { get; } = new List<Paciente>();
 }

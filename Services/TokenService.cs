@@ -20,6 +20,7 @@ namespace authentication_jwt.Services
                 {
                     new Claim(ClaimTypes.Name, user.Nome.ToString()),
                     new Claim("Perfil", user.Perfil.ToString()),
+                    new Claim("Master", user.Master.ToString()),
                     new Claim("Email", user.Email.ToString()),
                     new Claim("UsuarioId", user.Id.ToString()),
                     new Claim("PacienteId", user.PacienteId.ToString()),

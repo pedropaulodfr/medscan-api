@@ -30,6 +30,7 @@ namespace authentication_jwt.Controllers
                     Id = user.Id,
                     Nome = user.Nome,
                     Perfil = user.Perfil,
+                    Master = user.Master,
                     Email = user.Email,
                     Senha = user.Senha,
                     PacienteId = 0
@@ -62,6 +63,7 @@ namespace authentication_jwt.Controllers
                     Nome = _user.Nome,
                     Email = _user.Email,
                     Perfil = _user.Perfil,
+                    Master = _user.Master.ToString(),
                     Token = token,
                     PacienteId = _user.PacienteId
                 };
