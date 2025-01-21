@@ -21,6 +21,10 @@ builder.Services.AddDbContextPool<AppDbContext>((serviceProvider, options) =>
         string sqlServerConnection = builder.Configuration.GetConnectionString(httpContextAccessor.HttpContext.Request.Headers["TenantId"].FirstOrDefault());
         options.UseSqlServer(sqlServerConnection);
     }
+    else
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
 });
 
 string MyAllowSpecificOrigins = "_myAllowspecificOrigins";
