@@ -5013,11 +5013,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documentos\\projects\\medic-scanner\\medscanner-api\\medscanner-api.csproj",
+      "projectUniqueName": "d:\\Documentos\\projects\\medic-scanner\\medscanner-api\\medscanner-api.csproj",
       "projectName": "medscanner-api",
-      "projectPath": "D:\\Documentos\\projects\\medic-scanner\\medscanner-api\\medscanner-api.csproj",
+      "projectPath": "d:\\Documentos\\projects\\medic-scanner\\medscanner-api\\medscanner-api.csproj",
       "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "D:\\Documentos\\projects\\medic-scanner\\medscanner-api\\obj\\",
+      "outputPath": "d:\\Documentos\\projects\\medic-scanner\\medscanner-api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -16,6 +16,7 @@ namespace authentication_jwt.DTO
         public string? Unidade { get; set; }
         public long? Quantidade { get; set; }
         public string? Tipo { get; set; }
+        public long? TipoId { get; set; }
 
         public DateTime? Data { get; set; }
 

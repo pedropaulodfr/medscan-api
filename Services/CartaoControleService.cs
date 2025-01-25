@@ -37,6 +37,7 @@ namespace authentication_jwt.Services
                 Unidade = m.Medicamento.Unidade.Identificacao,
                 Quantidade = m.Quantidade,
                 Tipo = m.Medicamento.TipoMedicamento.Identificacao,
+                TipoId = m.Medicamento.TipoMedicamento.Id,
                 Data = m.Data,
                 DataRetorno = m.DataRetorno,
                 Profissional = m.Profissional
