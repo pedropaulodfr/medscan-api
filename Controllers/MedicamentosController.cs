@@ -30,6 +30,21 @@ namespace authentication_jwt.Controllers
             }
         }
         
+        [Authorize]
+        [HttpGet]
+        [Route("getMedicamentosReceituario/{PacienteId?}")]
+        public async Task<ActionResult> GetMedicamentosReceituario(long? PacienteId)
+        {
+            try
+            {
+                return StatusCode(200, await _medicamentosService.GetMedicamentosReceituario(PacienteId.Value));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex });
+            }
+        }
+        
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         [Route("insert")]
