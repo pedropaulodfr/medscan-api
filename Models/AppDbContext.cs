@@ -17,6 +17,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Medicamento> Medicamentos { get; set; }
 
+    public virtual DbSet<Notificaco> Notificacoes { get; set; }
+
     public virtual DbSet<Paciente> Pacientes { get; set; }
 
     public virtual DbSet<Receituario> Receituarios { get; set; }
@@ -95,6 +97,35 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Unidade).WithMany(p => p.Medicamentos)
                 .HasForeignKey(d => d.UnidadeId)
                 .HasConstraintName("FK_Medicamentos_Unidades");
+        });
+
+        modelBuilder.Entity<Notificaco>(entity =>
+        {
+            entity.Property(e => e.CartaoControleId).HasColumnName("CartaoControle_Id");
+            entity.Property(e => e.Data).HasColumnType("datetime");
+            entity.Property(e => e.EmailId).HasColumnName("Email_Id");
+            entity.Property(e => e.PacienteId).HasColumnName("Paciente_Id");
+            entity.Property(e => e.Tipo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioId).HasColumnName("Usuario_Id");
+
+            entity.HasOne(d => d.CartaoControle).WithMany(p => p.Notificacos)
+                .HasForeignKey(d => d.CartaoControleId)
+                .HasConstraintName("FK_Notificacoes_CartaoControle");
+
+            entity.HasOne(d => d.Email).WithMany(p => p.Notificacos)
+                .HasForeignKey(d => d.EmailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Notificacoes_Emails");
+
+            entity.HasOne(d => d.Paciente).WithMany(p => p.Notificacos)
+                .HasForeignKey(d => d.PacienteId)
+                .HasConstraintName("FK_Notificacoes_Pacientes1");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.Notificacos)
+                .HasForeignKey(d => d.UsuarioId)
+                .HasConstraintName("FK_Notificacoes_Usuarios1");
         });
 
         modelBuilder.Entity<Paciente>(entity =>

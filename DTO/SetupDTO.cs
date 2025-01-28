@@ -8,6 +8,7 @@ namespace authentication_jwt.DTO
     public class SetupDTO
     {
         public string? Urlapi { get; set; }
+        public string? Urlweb { get; set; }
 
         public string? CaminhoArquivos { get; set; }
 
@@ -20,5 +21,6 @@ namespace authentication_jwt.DTO
         public string? SmtpUser { get; set; }
 
         public string? SmtpPassword { get; set; }
+        public int? DiasNotificacaoRetorno { get; set; }
     }
 }

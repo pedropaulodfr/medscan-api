@@ -18,4 +18,6 @@ public partial class Email
     public string? Corpo { get; set; }
 
     public bool? Ativo { get; set; }
+
+    public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
 }

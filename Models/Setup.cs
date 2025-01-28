@@ -22,4 +22,6 @@ public partial class Setup
     public string? CaminhoArquivos { get; set; }
 
     public bool? UsarCodigoCadastro { get; set; }
+
+    public int? DiasNotificacaoRetorno { get; set; }
 }

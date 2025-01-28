@@ -19,8 +19,10 @@ namespace authentication_jwt.Services
             return await _dbContext.Setups.Select(x => new SetupDTO
             {
                 Urlapi = x.Urlapi,
+                Urlweb = x.Urlweb,
                 CaminhoArquivos = x.CaminhoArquivos,
                 UsarCodigoCadastro = x.UsarCodigoCadastro,
+                DiasNotificacaoRetorno = x.DiasNotificacaoRetorno,
                 SmtpHost = x.SmtpHost,
                 SmtpPort = x.SmtpPort,
                 SmtpUser = x.SmtpUser,
@@ -54,6 +56,18 @@ namespace authentication_jwt.Services
         {
             try
             {
+                var setup = await _dbContext.Setups.FirstOrDefaultAsync();
+                if (setup == null)
+                    throw new ArgumentException("Setup não encontrado!");
+                
+                setup.Urlweb = model.Urlweb;
+                setup.Urlapi = model.Urlapi;
+                setup.CaminhoArquivos = model.CaminhoArquivos;
+                setup.DiasNotificacaoRetorno = model.DiasNotificacaoRetorno;
+                setup.UsarCodigoCadastro = model.UsarCodigoCadastro;
+
+                await _dbContext.SaveChangesAsync();
+                
                 return model;
             }
             catch (Exception ex)

@@ -41,5 +41,7 @@ public partial class Paciente
 
     public virtual ICollection<CartaoControle> CartaoControles { get; } = new List<CartaoControle>();
 
+    public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
+
     public virtual Usuario Usuarios { get; set; } = null!;
 }
