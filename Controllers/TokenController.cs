@@ -24,7 +24,10 @@ namespace authentication_jwt.Controllers
             try
             {
                 // Recupera o usuário
-                var user = await _dbContext.Usuarios.Where(x => x.Email == model.Email && x.Senha == model.Senha).FirstOrDefaultAsync();
+                var user = await _dbContext.Usuarios.Where(x => x.Email == model.Email && x.Senha == model.Senha && x.Ativo != false && x.Deletado != true)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
                 UsuarioDTO _user = new UsuarioDTO()
                 {
                     Id = user.Id,
