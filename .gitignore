@@ -1,5 +1,6 @@
 // filepath: /D:/Documentos/projects/medic-scanner/medscanner-api/.gitignore
 appsettings.json
+appsettings.Development.json
 /medscanner-web/.env
 
 /medscanner-api/out
@@ -20,3 +21,7 @@ x86/
 
 **/bin/
 **/obj/
+**/out/
+**/.vs/
+**/.vscode/
+**/*.log
