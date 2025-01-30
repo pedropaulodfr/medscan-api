@@ -17,3 +17,6 @@ yarn-error.log*
 [Rr]eleases/
 x64/
 x86/
+
+**/bin/
+**/obj/
