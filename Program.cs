@@ -31,7 +31,11 @@ string MyAllowSpecificOrigins = "_myAllowspecificOrigins";
 builder.Services.AddCors(options => {
     options.AddPolicy(MyAllowSpecificOrigins, builder => 
     {
-        builder.WithOrigins("https://medscan-web.fly.dev", "http://localhost:3000");
+        builder.WithOrigins(
+            "https://medscan-web.fly.dev", 
+            "http://localhost:3000", 
+            "https://medscan-web.vercel.app"
+        );
         builder.AllowAnyHeader();
         builder.AllowAnyMethod();
     });
