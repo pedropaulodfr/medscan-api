@@ -37,7 +37,7 @@ namespace authentication_jwt.Controllers
         {
             try
             {
-                return StatusCode(200, await _medicamentosService.GetMedicamentosReceituario(PacienteId.Value));
+                return StatusCode(200, await _medicamentosService.GetMedicamentosReceituario(PacienteId.GetValueOrDefault(0)));
             }
             catch (Exception ex)
             {

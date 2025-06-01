@@ -55,7 +55,7 @@ namespace authentication_jwt.Services
         {
             try
             {
-                if (PacienteId == null || PacienteId == 0)
+                if (PacienteId == 0)
                     PacienteId = _acesso.PacienteId.Value;
 
                 List<MedicamentoDTO> medicamentos = new List<MedicamentoDTO>();
@@ -71,7 +71,7 @@ namespace authentication_jwt.Services
                 {
                     var _medicamento = new MedicamentoDTO
                     {
-                        Id = x.Id,
+                        Id = x.Medicamento.Id,
                         Identificacao = x.Medicamento.Identificacao,
                         Descricao = x.Medicamento.Descricao,
                         Concentracao = x.Medicamento.Concentracao,

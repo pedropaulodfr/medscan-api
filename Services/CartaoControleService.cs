@@ -42,7 +42,7 @@ namespace authentication_jwt.Services
                 DataRetorno = m.DataRetorno,
                 Profissional = m.Profissional
             })
-            .OrderBy(x => x.Data).ToList();
+            .OrderByDescending(x => x.Data).ToList();
 
             return retorno;
         }
@@ -68,7 +68,7 @@ namespace authentication_jwt.Services
                 DataRetorno = m.DataRetorno,
                 Profissional = m.Profissional
             })
-            .OrderBy(x => x.Data).ToList();
+            .OrderByDescending(x => x.Data).ToList();
 
             return retorno;
         }

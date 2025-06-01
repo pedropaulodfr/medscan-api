@@ -20,11 +20,9 @@ namespace authentication_jwt.Controllers
         [Route("get/{PacienteId}")]
         public async Task<ActionResult> Get(long PacienteId)
         {
-            var result = await _cartaoControleService.Get(PacienteId);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return Ok(await _cartaoControleService.Get(PacienteId));
             }
             catch (Exception ex)
             {
@@ -37,11 +35,9 @@ namespace authentication_jwt.Controllers
         [Route("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            var result = await _cartaoControleService.GetAll();  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return Ok(await _cartaoControleService.GetAll());
             }
             catch (Exception ex)
             {
@@ -54,11 +50,9 @@ namespace authentication_jwt.Controllers
         [Route("insert")]
         public async Task<ActionResult> Insert([FromBody] CartaoControleDTO model)
         {
-            var result = await _cartaoControleService.Insert(model);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return Ok(await _cartaoControleService.Insert(model));
             }
             catch (Exception ex)
             {
@@ -71,11 +65,9 @@ namespace authentication_jwt.Controllers
         [Route("update")]
         public async Task<ActionResult> Update([FromBody] CartaoControleDTO model)
         {
-            var result = await _cartaoControleService.Update(model);  // Chama o método no serviço
-
             try
             {
-                return Ok(result);
+                return Ok(await _cartaoControleService.Update(model));
             }
             catch (Exception ex)
             {
@@ -88,10 +80,9 @@ namespace authentication_jwt.Controllers
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _cartaoControleService.Delete(id);  // Chama o método no serviço
-
             try
             {
+                await _cartaoControleService.Delete(id);  // Chama o método no serviço
                 return Ok(new { mensagem = "Registro deletado com sucesso!" });
             }
             catch (Exception ex)
