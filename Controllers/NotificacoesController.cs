@@ -19,14 +19,14 @@ namespace authentication_jwt.Controllers
             _notificacoesService = notificacoesService;
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("criarNotificacao")]
-        public async Task<ActionResult> CriarNotificacao()
+        [Route("getAllNotificacoes")]
+        public async Task<ActionResult> GetNotificaGetAllNotificacoescoesNaoLidas()
         {
             try
             {
-                await _notificacoesService.CriarNotificacoes();
-                return Ok();
+                return StatusCode(200, await _notificacoesService.GetAllNotificacoes());
             }
             catch (Exception ex)
             {
@@ -34,28 +34,14 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("getUsuariosNotificacoes")]
-        public async Task<ActionResult> GetUsuariosNotificacoes()
+        [Route("updateNotificacaoLida/{notificacaoId}")]
+        public async Task<ActionResult> UpdateNotificacaoLida(long notificacaoId)
         {
             try
             {
-                return StatusCode(200, await _notificacoesService.GetUsuariosNotificacoes());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex });
-            }
-        }
-
-        [HttpGet]
-        [Route("processarNotificacoes")]
-        public async Task<ActionResult> ProcessarNotificacoes()
-        {
-            try
-            {
-                Console.WriteLine("Iniciando processamento de notificações...");
-                await _notificacoesService.ProcessarNotificacoes();
+                await _notificacoesService.UpdateNotificacaoLida(notificacaoId);
                 return Ok();
             }
             catch (Exception ex)

@@ -71,7 +71,7 @@ namespace authentication_jwt.Services
                 throw new ArgumentException("Configuração de email não encontrada");
 
             var body = setupEmail?.Corpo.Replace("{NOME}", nome).Replace("{SENHA}", senha).Replace("{USUARIO}", email)
-                                        .Replace("{URLApi}", "https://medscan-web.fly.dev/") ?? "";
+                                        .Replace("{URLWeb}", setup.Urlweb) ?? "";
 
             try
             {

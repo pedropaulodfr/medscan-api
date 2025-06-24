@@ -21,6 +21,8 @@ public partial class Notificaco
 
     public bool? Enviado { get; set; }
 
+    public bool? Lido { get; set; }
+
     public virtual CartaoControle? CartaoControle { get; set; }
 
     public virtual Email Email { get; set; } = null!;

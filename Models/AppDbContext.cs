@@ -33,13 +33,13 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Unidade> Unidades { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<UsuarioNotificacaoDTO> UsuariosNotificacao { get; set; }
+    public DbSet<UsuarioNotificacao> UsuariosNotificacao { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_CI_AS");
 
-        modelBuilder.Entity<UsuarioNotificacaoDTO>(entity =>
+        modelBuilder.Entity<UsuarioNotificacao>(entity =>
         {
             entity.HasNoKey();
         });

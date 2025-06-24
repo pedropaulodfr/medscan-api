@@ -85,8 +85,8 @@ builder.Services.AddScoped<AcessoService>();
 builder.Services.AddScoped<UsuariosService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<SetupService>();
-//builder.Services.AddScoped<NotificacoesService>();
-builder.Services.AddHostedService<NotificacoesService>();
+builder.Services.AddScoped<NotificacoesService>();
+builder.Services.AddHostedService<ProcessamentoNotificacoesService>();
 
 var app = builder.Build();
 

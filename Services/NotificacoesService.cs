@@ -5,113 +5,65 @@ using System.Threading.Tasks;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace authentication_jwt.Services
 {
-    public class NotificacoesService : BackgroundService
+    public class NotificacoesService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly AppDbContext _dbContext;
+        private readonly AcessoService _acesso;
 
-        public NotificacoesService(IServiceScopeFactory scopeFactory)
+        // Construtor para injetar o AppDbContext
+        public NotificacoesService(AppDbContext dbContext, AcessoService acesso)
         {
-            _scopeFactory = scopeFactory;
+            _dbContext = dbContext;
+            _acesso = acesso;
         }
 
-        public async Task CriarNotificacoes()
+        public async Task<List<UsuarioNotificacaoDTO>> GetAllNotificacoes()
         {
             try
             {
-                using (var scope = _scopeFactory.CreateScope())
+                var notificacoes = await _dbContext.Notificacoes
+                                                    .Include(x => x.CartaoControle)
+                                                        .ThenInclude(y => y.Medicamento)
+                                                        .ThenInclude(z => z.Unidade)
+                                                    .Include(x => x.Paciente)
+                                                    .Where(x => x.PacienteId == _acesso.PacienteId)
+                                                    .OrderByDescending(x => x.Data)
+                                                    .Select(n => new UsuarioNotificacaoDTO
+                                                    {
+                                                        Notificacao_Id = n.Id,
+                                                        Data = (DateTime)n.Data,
+                                                        Medicamento = $"{n.CartaoControle.Medicamento.Identificacao} {n.CartaoControle.Medicamento.Concentracao} {n.CartaoControle.Medicamento.Unidade.Identificacao}",
+                                                        Nome = n.Paciente.Nome,
+                                                        Email = n.Paciente.Email,
+                                                        Tipo = n.Tipo,
+                                                        Lido = n.Lido == null ? false : n.Lido,
+                                                        Titulo = _dbContext.Emails.Where(e => e.Identificacao == n.Tipo && e.Ativo == true).Select(e => e.Titulo).FirstOrDefault()
+                                                    }).ToListAsync();
+                return notificacoes;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
+            }
+        }
+
+        public async Task UpdateNotificacaoLida(long notificacaoId)
+        {
+            try
+            {
+                var notificacao = await _dbContext.Notificacoes.Where(x => x.Id == notificacaoId).FirstOrDefaultAsync();
+                if (notificacao != null)
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    await dbContext.Database.ExecuteSqlRawAsync("EXEC CriaNotificacao");
+                    notificacao.Lido = true;
+                    await _dbContext.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao criar notificações: " + ex.Message);
-            }
-        }
-
-        public async Task<List<UsuarioNotificacaoDTO>> GetUsuariosNotificacoes()
-        {
-            try
-            {
-                using (var scope = _scopeFactory.CreateScope())
-                {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var usuarios = await dbContext.Set<UsuarioNotificacaoDTO>()
-                        .FromSqlRaw("SELECT * FROM fn_GetUsuariosNotificacao()")
-                        .ToListAsync();
-
-                    return usuarios;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao criar notificações: " + ex.Message);
-            }
-        }
-
-        public async Task ProcessarNotificacoes()
-        {
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
-
-                await CriarNotificacoes();
-                var usuarios = await GetUsuariosNotificacoes();
-
-                var emailTemplate = await dbContext.Emails.Where(x => x.Identificacao == "NotificacaoRetorno" && x.Ativo == true).FirstOrDefaultAsync();
-
-                string titulo = string.Empty;
-                string corpo = string.Empty;
-
-                if (emailTemplate != null)
-                {
-                    titulo = emailTemplate.Titulo;
-                    corpo = emailTemplate.Corpo;
-
-                    foreach (var usuario in usuarios)
-                    {
-                        string nome = usuario.Nome;
-                        string email = usuario.Email;
-                        string medicamento = usuario.Medicamento;
-                        string dataRetorno = usuario.DataRetorno.ToString("dd/MM/yyyy");
-
-                        string body = corpo
-                            .Replace("{NOME}", nome)
-                            .Replace("{MEDICAMENTO}", medicamento)
-                            .Replace("{DATARETORNO}", dataRetorno)
-                            .Replace("{ICONEMEDICAMENTO}", "💊")
-                            .Replace("{ICONECALENDARIO}", "📆");
-
-                        await emailService.SendEmail(email, titulo, body);
-                        var usuarioNotificacao = await dbContext.Notificacoes.Where(x => x.Id == usuario.Notificacao_Id).FirstOrDefaultAsync();
-                        if (usuarioNotificacao != null)
-                        {
-                            usuarioNotificacao.Enviado = true;
-                            await dbContext.SaveChangesAsync();
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception("ERRO! Os E-mails não foram enviados, pois esse tipo de Notificação não possui um template ativo!");
-                }
-            }
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-
-            Console.WriteLine($"Iniciando o serviço de notificações em {DateTime.Now.ToString("dd/MM/yyyy")} às {DateTime.Now.ToString("HH:mm:ss")}.");
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await ProcessarNotificacoes();
-                await Task.Delay(TimeSpan.FromHours(2), stoppingToken); // Adicionar delay de 2 horas
+                throw new ArgumentException(ex.Message ?? ex.InnerException.ToString());
             }
         }
     }
