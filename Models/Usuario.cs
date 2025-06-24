@@ -25,6 +25,8 @@ public partial class Usuario
 
     public bool? Master { get; set; }
 
+    public virtual ICollection<Log> Logs { get; } = new List<Log>();
+
     public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
 
     public virtual ICollection<Paciente> Pacientes { get; } = new List<Paciente>();

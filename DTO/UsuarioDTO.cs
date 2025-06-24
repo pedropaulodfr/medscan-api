@@ -32,4 +32,13 @@ namespace authentication_jwt.DTO
         public bool? Master { get; set; }
         public PacienteDTO? Paciente { get; set; }
     }
+
+    public class UsuarioNotificacaoDTO
+    {
+        public long Notificacao_Id  { get; set; }
+        public DateTime DataRetorno { get; set; }
+        public string Medicamento { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+    }
 }

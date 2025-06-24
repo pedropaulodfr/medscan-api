@@ -113,6 +113,7 @@ namespace authentication_jwt.Services
                 {
                     smtpClient.Credentials = new NetworkCredential(setup.SmtpUser, setup.SmtpPassword);
                     smtpClient.EnableSsl = true;
+                    body = body.Replace("{URLWeb}", setup.Urlweb);
 
                     var mailMessage = new MailMessage
                     {

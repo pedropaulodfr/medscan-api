@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using authentication_jwt.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace authentication_jwt.Models;
@@ -15,6 +16,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Email> Emails { get; set; }
 
+    public virtual DbSet<Log> Logs { get; set; }
+
     public virtual DbSet<Medicamento> Medicamentos { get; set; }
 
     public virtual DbSet<Notificaco> Notificacoes { get; set; }
@@ -29,12 +32,18 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Unidade> Unidades { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-
     public virtual DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<UsuarioNotificacaoDTO> UsuariosNotificacao { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Latin1_General_CI_AS");
+
+        modelBuilder.Entity<UsuarioNotificacaoDTO>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
         modelBuilder.Entity<CartaoControle>(entity =>
         {
             entity.ToTable("CartaoControle");
@@ -73,6 +82,23 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Titulo)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Log>(entity =>
+        {
+            entity.ToTable("Logs", "Logs");
+
+            entity.Property(e => e.Acao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.DataHora).HasColumnType("datetime");
+            entity.Property(e => e.JsonRequest).HasColumnType("text");
+            entity.Property(e => e.JsonResponse).HasColumnType("text");
+            entity.Property(e => e.UsuarioId).HasColumnName("Usuario_Id");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.Logs)
+                .HasForeignKey(d => d.UsuarioId)
+                .HasConstraintName("FK_Logs_Usuarios");
         });
 
         modelBuilder.Entity<Medicamento>(entity =>
