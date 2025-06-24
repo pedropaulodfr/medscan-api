@@ -111,7 +111,7 @@ namespace authentication_jwt.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 await ProcessarNotificacoes();
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken); // Adicionar delay de 1 hora
+                await Task.Delay(TimeSpan.FromHours(2), stoppingToken); // Adicionar delay de 2 horas
             }
         }
     }
