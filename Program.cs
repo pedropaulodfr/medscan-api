@@ -1,6 +1,7 @@
 using System.Text;
 using authentication_jwt.Models;
 using authentication_jwt.Services;
+using authentication_jwt.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -87,6 +88,7 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<SetupService>();
 builder.Services.AddScoped<NotificacoesService>();
 builder.Services.AddHostedService<ProcessamentoNotificacoesService>();
+builder.Services.AddScoped<Funcoes>();
 
 var app = builder.Build();
 

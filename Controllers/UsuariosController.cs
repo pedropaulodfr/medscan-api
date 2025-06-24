@@ -23,7 +23,7 @@ namespace authentication_jwt.Controllers
         {
             try
             {
-                return StatusCode(200,  await _usuariosService.Get(id));
+                return StatusCode(200, await _usuariosService.Get(id));
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace authentication_jwt.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpPut]
         [Route("update")]
@@ -90,7 +90,7 @@ namespace authentication_jwt.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpDelete]
         [Route("delete/{id}")]
@@ -105,7 +105,7 @@ namespace authentication_jwt.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-        } 
+        }
 
         [AllowAnonymous]
         [HttpPost]

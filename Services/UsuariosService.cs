@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Transfer;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
 using authentication_jwt.Utils;
@@ -16,13 +18,16 @@ namespace authentication_jwt.Services
         private readonly AppDbContext _dbContext;
         private readonly EmailService _emailService;
         private readonly AcessoService _acessoService;
+        private readonly Funcoes _funcoes;
 
         // Construtor para injetar o AppDbContext
-        public UsuariosService(AppDbContext dbContext, EmailService emailService, AcessoService acessoService)
+        public UsuariosService(AppDbContext dbContext, EmailService emailService, AcessoService acessoService, Funcoes funcoes)
         {
+            _funcoes = funcoes;
             _dbContext = dbContext;
             _emailService = emailService;
-            _acessoService = acessoService; 
+            _acessoService = acessoService;
+            _funcoes = funcoes;
         }
 
         public async Task<UsuarioDTO> Get(long id)
@@ -195,8 +200,7 @@ namespace authentication_jwt.Services
                 if (existUsuairo == null)
                     throw new ArgumentException("Usuário não localizado!");
 
-                var funcoes = new Funcoes();
-                var resultado = await funcoes.UploadImagem(model.ImagemPerfil);
+                var resultado = await _funcoes.UploadFileAsync(model.ImagemPerfil, "fotos");
 
                 if(string.IsNullOrEmpty(resultado))
                     throw new ArgumentException("Erro ao fazer upload da imagem!");

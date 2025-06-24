@@ -4,11 +4,19 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Transfer;
 
 namespace authentication_jwt.Utils
 {
     public class Funcoes
     {
+        private readonly IConfiguration _configuration;
+        public Funcoes(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public static string GerarSenhaAleatoria()
         {
             const string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -52,7 +60,7 @@ namespace authentication_jwt.Utils
                     // Cria o formulário multipart
                     var formData = new MultipartFormDataContent();
                     formData.Add(new StringContent(apiKey), "key");
-                    formData.Add(new StringContent(imagemBase64), "image"); 
+                    formData.Add(new StringContent(imagemBase64), "image");
 
                     // Envia a requisição POST
                     var response = await client.PostAsync(url, formData);
@@ -81,6 +89,28 @@ namespace authentication_jwt.Utils
                 Console.WriteLine($"Erro inesperado ao fazer upload: {ex.Message}");
                 return "";
             }
+        }
+        
+        public async Task<string> UploadFileAsync(string base64, string tipo)
+        {
+            // tipo: fotos, documentos
+            var accessKey = _configuration["AWS:AccessKey"];
+            var secretKey = _configuration["AWS:SecretKey"];
+            var bucketName = _configuration["AWS:BucketName"];
+            var region = _configuration["AWS:Region"];
+            var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
+
+            // Remove o prefixo data:image/png;base64, se existir
+            var base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
+            byte[] fileBytes = Convert.FromBase64String(base64Data);
+
+            using var client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.GetBySystemName(region));
+            using var memoryStream = new MemoryStream(fileBytes);
+
+            var fileTransferUtility = new TransferUtility(client);
+            await fileTransferUtility.UploadAsync(memoryStream, bucketName, fileName);
+
+            return $"https://{bucketName}.s3.{region}.amazonaws.com/{fileName}";
         }
     }
 }

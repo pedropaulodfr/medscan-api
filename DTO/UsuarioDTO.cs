@@ -35,7 +35,7 @@ namespace authentication_jwt.DTO
 
     public class UsuarioNotificacaoDTO
     {
-        public long Notificacao_Id  { get; set; }
+        public long Notificacao_Id { get; set; }
         public DateTime Data { get; set; }
         public DateTime DataRetorno { get; set; }
         public string Medicamento { get; set; }
