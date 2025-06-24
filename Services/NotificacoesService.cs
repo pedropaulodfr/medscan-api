@@ -106,10 +106,12 @@ namespace authentication_jwt.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+
+            Console.WriteLine($"Iniciando o serviço de notificações em {DateTime.Now.ToString("dd/MM/yyyy")} às {DateTime.Now.ToString("HH:mm:ss")}.");
             while (!stoppingToken.IsCancellationRequested)
             {
                 await ProcessarNotificacoes();
-                await Task.Delay(5000, stoppingToken); // Espera 5 segundos
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken); // Adicionar delay de 1 hora
             }
         }
     }
