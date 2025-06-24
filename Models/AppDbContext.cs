@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using authentication_jwt.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace authentication_jwt.Models;
@@ -33,16 +32,10 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Unidade> Unidades { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<UsuarioNotificacao> UsuariosNotificacao { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_CI_AS");
-
-        modelBuilder.Entity<UsuarioNotificacao>(entity =>
-        {
-            entity.HasNoKey();
-        });
 
         modelBuilder.Entity<CartaoControle>(entity =>
         {
@@ -181,6 +174,9 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("CPF");
             entity.Property(e => e.DataNascimento).HasColumnType("date");
             entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Email2)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Logradouro)

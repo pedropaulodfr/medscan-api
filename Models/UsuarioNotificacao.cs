@@ -12,5 +12,6 @@ namespace authentication_jwt.Models
         public string Medicamento { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
+        public string Email2 { get; set; }
     }
 }

@@ -45,6 +45,7 @@ namespace authentication_jwt.Services
                         Nome = paciente.Nome,
                         NomeCompleto = paciente.NomeCompleto,
                         Email = paciente.Email,
+                        Email2 = paciente.Email2,
                         Cpf = paciente.Cpf,
                         DataNascimento = paciente.DataNascimento,
                         Endereco = string.Format(@"{0}, {1}, {2}, {3}, {4}, {5}, {6}", paciente.Logradouro, paciente.Numero, paciente.Complemento, paciente.Bairro, paciente.Cidade, paciente.Uf, paciente.Cep ),

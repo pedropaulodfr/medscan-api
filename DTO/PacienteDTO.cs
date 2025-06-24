@@ -15,6 +15,7 @@ namespace authentication_jwt.DTO
         public string? NomeCompleto { get; set; }
 
         public string? Email { get; set; }
+        public string? Email2 { get; set; }
 
         public string Cpf { get; set; } = null!;
 

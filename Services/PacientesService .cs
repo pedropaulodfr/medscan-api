@@ -35,6 +35,7 @@ namespace authentication_jwt.Services
                     Nome = paciente.Nome,
                     NomeCompleto = paciente.NomeCompleto,
                     Email = paciente.Email,
+                    Email2 = paciente.Email2,
                     Cpf = paciente.Cpf,
                     DataNascimento = paciente.DataNascimento,
                     Logradouro = paciente.Logradouro,
@@ -67,6 +68,7 @@ namespace authentication_jwt.Services
                 Nome = x.Nome,
                 NomeCompleto = x.NomeCompleto,
                 Email = x.Email,
+                Email2 = x.Email2,
                 Cpf = x.Cpf,
                 DataNascimento = x.DataNascimento,
                 Logradouro = x.Logradouro,
@@ -119,7 +121,8 @@ namespace authentication_jwt.Services
                         Id = model.Id,
                         Nome = model.Nome,
                         NomeCompleto = model.NomeCompleto,
-                        Email = model.Email,
+                        Email = model.Email.Trim(),
+                        Email2 = model.Email2.Trim(),
                         Cpf = model.Cpf.Replace(".", "").Replace("-", ""),
                         DataNascimento = model.DataNascimento,
                         Logradouro = model.Logradouro,
@@ -165,6 +168,7 @@ namespace authentication_jwt.Services
                 existPaciente.Nome = model.Nome;
                 existPaciente.NomeCompleto = model.NomeCompleto;
                 existPaciente.Email = model.Email;
+                existPaciente.Email2 = model.Email2;
                 existPaciente.Cpf = model.Cpf.Replace(".", "").Replace("-", "");
                 existPaciente.DataNascimento = model.DataNascimento;
                 existPaciente.Logradouro = model.Logradouro;

@@ -49,7 +49,8 @@ namespace authentication_jwt.Services
                             DataRetorno = u.DataRetorno,
                             Medicamento = u.Medicamento,
                             Nome = u.Nome,
-                            Email = u.Email
+                            Email = u.Email,
+                            Email2 = u.Email2
                         })
                         .ToListAsync();
 
@@ -97,6 +98,9 @@ namespace authentication_jwt.Services
                             .Replace("{ICONECALENDARIO}", "📆");
 
                         await emailService.SendEmail(email, titulo, body);
+                        if (!string.IsNullOrEmpty(usuario.Email2))
+                            await emailService.SendEmail(usuario.Email2, titulo, body);
+                            
                         var usuarioNotificacao = await dbContext.Notificacoes.Where(x => x.Id == usuario.Notificacao_Id).FirstOrDefaultAsync();
                         if (usuarioNotificacao != null)
                         {
