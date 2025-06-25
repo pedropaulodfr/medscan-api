@@ -65,16 +65,15 @@ namespace authentication_jwt.Services
 
         public async Task EnviarEmailNovoCadastro(string email, string nome, string senha)
         {
-            var setup = await _dbContext.Setups.FirstOrDefaultAsync();
-            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "NovoCadastro" && x.Ativo == true).FirstOrDefaultAsync();
-            if (setupEmail == null)
-                throw new ArgumentException("Configuração de email não encontrada");
-
-            var body = setupEmail?.Corpo.Replace("{NOME}", nome).Replace("{SENHA}", senha).Replace("{USUARIO}", email)
-                                        .Replace("{URLWeb}", setup.Urlweb) ?? "";
-
             try
             {
+                var setup = await _dbContext.Setups.FirstOrDefaultAsync();
+                var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "NovoCadastro" && x.Ativo == true).FirstOrDefaultAsync();
+                if (setupEmail == null)
+                    throw new ArgumentException("Configuração de email não encontrada");
+
+                var body = setupEmail?.Corpo.Replace("{NOME}", nome).Replace("{SENHA}", senha).Replace("{USUARIO}", email) ?? "";
+
                 await SendEmail(email, setupEmail.Titulo, body);
             }
             catch (Exception ex)
@@ -84,15 +83,15 @@ namespace authentication_jwt.Services
         }
         public async Task EnviarEmailEsqueceuSenha(string email, string nome, string senha)
         {
-            var setup = await _dbContext.Setups.FirstOrDefaultAsync();
-            var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "RecuperarSenha" && x.Ativo == true).FirstOrDefaultAsync();
-            if (setupEmail == null)
-                throw new ArgumentException("Configuração de email não encontrada");
-
-            var body = setupEmail?.Corpo.Replace("{NOME}", nome).Replace("{SENHA}", senha).Replace("{URLApi}", "https://medscan-web.fly.dev/") ?? "";
-
             try
             {
+                var setup = await _dbContext.Setups.FirstOrDefaultAsync();
+                var setupEmail = await _dbContext.Emails.Where(x => x.Identificacao == "RecuperarSenha" && x.Ativo == true).FirstOrDefaultAsync();
+                if (setupEmail == null)
+                    throw new ArgumentException("Configuração de email não encontrada");
+
+                var body = setupEmail?.Corpo.Replace("{NOME}", nome).Replace("{SENHA}", senha) ?? "";
+
                 await SendEmail(email, setupEmail.Titulo, body);
             }
             catch (Exception ex)
@@ -113,7 +112,11 @@ namespace authentication_jwt.Services
                 {
                     smtpClient.Credentials = new NetworkCredential(setup.SmtpUser, setup.SmtpPassword);
                     smtpClient.EnableSsl = true;
-                    body = body.Replace("{URLWeb}", setup.Urlweb);
+                    body = body
+                        .Replace("{URLWeb}", setup.Urlweb)
+                        .Replace("{URLApi}", setup.Urlapi)
+                        .Replace("{ICONEMEDICAMENTO}", "💊")
+                        .Replace("{ICONECALENDARIO}", "📆");
 
                     var mailMessage = new MailMessage
                     {

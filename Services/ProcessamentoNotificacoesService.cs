@@ -93,10 +93,8 @@ namespace authentication_jwt.Services
                         string body = corpo
                             .Replace("{NOME}", nome)
                             .Replace("{MEDICAMENTO}", medicamento)
-                            .Replace("{DATARETORNO}", dataRetorno)
-                            .Replace("{ICONEMEDICAMENTO}", "💊")
-                            .Replace("{ICONECALENDARIO}", "📆");
-
+                            .Replace("{DATARETORNO}", dataRetorno);
+                            
                         await emailService.SendEmail(email, titulo, body);
                         if (!string.IsNullOrEmpty(usuario.Email2))
                             await emailService.SendEmail(usuario.Email2, titulo, body);
