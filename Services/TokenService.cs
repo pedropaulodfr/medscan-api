@@ -34,7 +34,7 @@ namespace authentication_jwt.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public static User ValidarTokenJWT(string token)
+        public static UserDTO ValidarTokenJWT(string token)
         {
             try
             {
@@ -52,11 +52,19 @@ namespace authentication_jwt.Services
 
                 var tokenUsername = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
                 var tokenRole = claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value;
+                var master = claimsPrincipal.FindFirst("Master")?.Value?.ToString();
 
-                User user = new User{
+                UserDTO user = new UserDTO
+                {
                     Username = tokenUsername,
                     Role = tokenRole,
                     Token = token,
+                    Email = claimsPrincipal.FindFirst("Email")?.Value,
+                    UsuarioId = long.TryParse(claimsPrincipal.FindFirst("UsuarioId")?.Value, out long usuarioId) ? usuarioId : (long?)null,
+                    Master = master.ToLower() == "true",
+                    Nome = tokenUsername,
+                    PacienteId = long.TryParse(claimsPrincipal.FindFirst("PacienteId")?.Value, out long pacienteId) ? pacienteId : (long?)null,
+                    Perfil = claimsPrincipal.FindFirst("Perfil")?.Value
                 };
 
                 return user;

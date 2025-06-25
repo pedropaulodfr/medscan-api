@@ -80,10 +80,10 @@ namespace authentication_jwt.Controllers
         }
 
         [HttpPost("validate")]
-        public async Task<ActionResult<User>> ValidarToken([FromBody] User model)
+        public async Task<ActionResult<UserDTO>> ValidarToken([FromBody] UserDTO model)
         {
             // Lógica para validar o token JWT
-            User user = TokenService.ValidarTokenJWT(model.Token);
+            UserDTO user = TokenService.ValidarTokenJWT(model.Token);
 
             if (user != null)
             {
