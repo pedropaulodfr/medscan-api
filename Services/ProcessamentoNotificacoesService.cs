@@ -119,7 +119,7 @@ namespace authentication_jwt.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
 
-            Console.WriteLine($"Iniciando o serviço de notificações em {DateTime.Now.ToString("dd/MM/yyyy")} às {DateTime.Now.ToString("HH:mm:ss")}.");
+            Console.WriteLine($"Iniciando o serviço de notificações em {DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(-3)).ToString("dd/MM/yyyy")} às {DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(-3)).ToString("HH:mm:ss")}.");
             try
             {
                 while (!stoppingToken.IsCancellationRequested)
