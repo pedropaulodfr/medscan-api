@@ -31,5 +31,19 @@ namespace authentication_jwt.Controllers
                 return BadRequest(new { message = ex });
             }
         }
+
+        [HttpGet]
+        [Route("relatorioReceituario/{pacienteId}")]
+        public async Task<ActionResult> RelatorioReceituario(long pacienteId)
+        {
+            try
+            {
+                return StatusCode(200, await _relatoriosService.RelatorioReceituario(pacienteId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex });
+            }
+        }
     }
 }

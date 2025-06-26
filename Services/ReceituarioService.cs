@@ -16,15 +16,16 @@ namespace authentication_jwt.Services
 
         public async Task<List<ReceituarioDTO>> Get(long PacienteId)
         {
-            var receituarios = await _dbContext.Receituarios
-                                                .Include(x => x.TipoMedicamento)
-                                                    .ThenInclude(y => y.Medicamentos)
-                                                        .ThenInclude(z => z.Unidade)
-                                                .Where(x => x.PacienteId == PacienteId)
-                                                .AsNoTracking().ToListAsync();
 
             try
             {
+                var receituarios = await _dbContext.Receituarios
+                                                    .Include(x => x.TipoMedicamento)
+                                                        .ThenInclude(y => y.Medicamentos)
+                                                            .ThenInclude(z => z.Unidade)
+                                                    .Where(x => x.PacienteId == PacienteId)
+                                                    .AsNoTracking().ToListAsync();
+                                                    
                 List<ReceituarioDTO> retorno = receituarios.Select(m => new ReceituarioDTO
                 {
                     Id = m.Id,
