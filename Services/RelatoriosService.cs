@@ -20,7 +20,10 @@ namespace authentication_jwt.Services
         public async Task<List<RelatorioMedicamentosDTO>> RelatorioMedicamentos(RelatorioMedicamentosFiltros model)
         {
             bool inativo = !string.IsNullOrEmpty(model.Status) && model.Status == "Inativo";
-            var medicamentos = _dbContext.Medicamentos.AsNoTracking().Where(x => x.Inativo == inativo).Select(m => new MedicamentoDTO
+            var medicamentos = _dbContext.Medicamentos
+                                    .Where(x => string.IsNullOrEmpty(model.Status) || x.Inativo == inativo)
+                                    .AsNoTracking()
+                                    .Select(m => new MedicamentoDTO
                 {
                     Id = m.Id,
                     Identificacao = m.Identificacao,
