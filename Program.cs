@@ -35,7 +35,9 @@ builder.Services.AddCors(options => {
         builder.WithOrigins(
             "https://medscan-web.fly.dev", 
             "http://localhost:3000", 
-            "https://medscan-web.vercel.app"
+            "https://medscan-web.vercel.app",
+            "https://www.mdscan.xyz",
+            "https://mdscan.xyz"
         );
         builder.AllowAnyHeader();
         builder.AllowAnyMethod();
