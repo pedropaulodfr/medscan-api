@@ -133,6 +133,10 @@ namespace authentication_jwt.Services
                 if (registro == null)
                     throw new Exception("Erro ao deletar, o registro não existe!");
 
+                var notificacoesCartaoControle = await _dbContext.Notificacoes.Where(x => x.CartaoControleId == registro.Id).ToListAsync();
+                if (notificacoesCartaoControle.Count > 0)
+                    _dbContext.RemoveRange(notificacoesCartaoControle);
+
                 _dbContext.Remove(registro);
                 await _dbContext.SaveChangesAsync();
 
