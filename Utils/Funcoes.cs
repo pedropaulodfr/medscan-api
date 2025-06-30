@@ -104,7 +104,7 @@ namespace authentication_jwt.Utils
                 var region = _configuration["AWS:Region"];
                 var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
 
-                Console.WriteLine(accessKey, secretKey, bucketName, region, fileName);
+                Console.WriteLine("AWS Log", accessKey, secretKey, bucketName, region, fileName);
 
                 // Remove o prefixo data:image/png;base64, se existir
                 var base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
