@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Web.Helpers;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +10,12 @@ namespace authentication_jwt.Services
     public class SetupService
     {
         private readonly AppDbContext _dbContext;
+        private readonly LogsService _log;
 
-        public SetupService(AppDbContext dbContext)
+        public SetupService(AppDbContext dbContext, LogsService log)
         {
             _dbContext = dbContext;
+            _log = log;
         }
 
         public async Task<SetupDTO> Get()
@@ -38,12 +42,22 @@ namespace authentication_jwt.Services
                 if (setup == null)
                     throw new ArgumentException("Setup não encontrado!");
 
+                var jsonAntigo = JsonSerializer.Serialize(new
+                {
+                    setup.SmtpHost,
+                    setup.SmtpPort,
+                    setup.SmtpUser,
+                    setup.SmtpPassword,
+                });
+
                 setup.SmtpHost = model.SmtpHost;
                 setup.SmtpPort = model.SmtpPort;
                 setup.SmtpUser = model.SmtpUser;
                 setup.SmtpPassword = model.SmtpPassword;
 
                 await _dbContext.SaveChangesAsync();
+
+                await _log.GravaLog(new Log {Acao = "Alteração SMTP", JsonAntigo = jsonAntigo, JsonNovo = JsonSerializer.Serialize(model)});
 
                 return model;
             }
@@ -59,6 +73,15 @@ namespace authentication_jwt.Services
                 var setup = await _dbContext.Setups.FirstOrDefaultAsync();
                 if (setup == null)
                     throw new ArgumentException("Setup não encontrado!");
+
+                var jsonAntigo = JsonSerializer.Serialize(new
+                {
+                    setup.Urlweb,
+                    setup.Urlapi,
+                    setup.CaminhoArquivos,
+                    setup.DiasNotificacaoRetorno,
+                    setup.UsarCodigoCadastro
+                });
                 
                 setup.Urlweb = model.Urlweb;
                 setup.Urlapi = model.Urlapi;
@@ -67,6 +90,8 @@ namespace authentication_jwt.Services
                 setup.UsarCodigoCadastro = model.UsarCodigoCadastro;
 
                 await _dbContext.SaveChangesAsync();
+
+                await _log.GravaLog(new Log {Acao = "Alteração Setup", JsonAntigo = jsonAntigo, JsonNovo = JsonSerializer.Serialize(model)});
                 
                 return model;
             }

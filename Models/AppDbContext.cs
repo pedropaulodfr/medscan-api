@@ -85,8 +85,8 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.DataHora).HasColumnType("datetime");
-            entity.Property(e => e.JsonRequest).HasColumnType("text");
-            entity.Property(e => e.JsonResponse).HasColumnType("text");
+            entity.Property(e => e.JsonAntigo).HasColumnType("text");
+            entity.Property(e => e.JsonNovo).HasColumnType("text");
             entity.Property(e => e.UsuarioId).HasColumnName("Usuario_Id");
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.Logs)

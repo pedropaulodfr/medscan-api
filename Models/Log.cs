@@ -13,9 +13,9 @@ public partial class Log
 
     public string? Acao { get; set; }
 
-    public string? JsonRequest { get; set; }
+    public string? JsonAntigo { get; set; }
 
-    public string? JsonResponse { get; set; }
+    public string? JsonNovo { get; set; }
 
     public virtual Usuario? Usuario { get; set; }
 }
