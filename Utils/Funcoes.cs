@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Transfer;
+using authentication_jwt.Models;
 
 namespace authentication_jwt.Utils
 {
@@ -94,23 +96,32 @@ namespace authentication_jwt.Utils
         public async Task<string> UploadFileAsync(string base64, string tipo)
         {
             // tipo: fotos, documentos
-            var accessKey = _configuration["AWS:AccessKey"];
-            var secretKey = _configuration["AWS:SecretKey"];
-            var bucketName = _configuration["AWS:BucketName"];
-            var region = _configuration["AWS:Region"];
-            var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
+            try
+            {
+                var accessKey = _configuration["AWS:AccessKey"];
+                var secretKey = _configuration["AWS:SecretKey"];
+                var bucketName = _configuration["AWS:BucketName"];
+                var region = _configuration["AWS:Region"];
+                var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
 
-            // Remove o prefixo data:image/png;base64, se existir
-            var base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
-            byte[] fileBytes = Convert.FromBase64String(base64Data);
+                Console.WriteLine(accessKey, secretKey, bucketName, region, fileName);
 
-            using var client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.GetBySystemName(region));
-            using var memoryStream = new MemoryStream(fileBytes);
+                // Remove o prefixo data:image/png;base64, se existir
+                var base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
+                byte[] fileBytes = Convert.FromBase64String(base64Data);
 
-            var fileTransferUtility = new TransferUtility(client);
-            await fileTransferUtility.UploadAsync(memoryStream, bucketName, fileName);
+                using var client = new AmazonS3Client(accessKey, secretKey, Amazon.RegionEndpoint.GetBySystemName(region));
+                using var memoryStream = new MemoryStream(fileBytes);
 
-            return $"https://{bucketName}.s3.{region}.amazonaws.com/{fileName}";
+                var fileTransferUtility = new TransferUtility(client);
+                await fileTransferUtility.UploadAsync(memoryStream, bucketName, fileName);
+
+                return $"https://{bucketName}.s3.{region}.amazonaws.com/{fileName}";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message ?? ex.InnerException.ToString());
+            }
         }
     }
 }
