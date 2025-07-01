@@ -100,6 +100,18 @@ namespace authentication_jwt.Utils
             {
                 var accessKey = _configuration["AWS:AccessKey"];
                 var secretKey = _configuration["AWS:SecretKey"];
+                
+                // Adicione logs para depuração
+                Console.WriteLine($"AccessKey: {!string.IsNullOrEmpty(accessKey)}");
+                Console.WriteLine($"SecretKey: {!string.IsNullOrEmpty(secretKey)}");
+
+                var _accessKey = _configuration["AWS__AccessKey"];
+                var _secretKey = _configuration["AWS__SecretKey"];
+
+                // Adicione logs para depuração
+                Console.WriteLine($"_AccessKey: {!string.IsNullOrEmpty(_accessKey)}");
+                Console.WriteLine($"_SecretKey: {!string.IsNullOrEmpty(_secretKey)}");
+
                 var bucketName = _configuration["AWS:BucketName"];
                 var region = _configuration["AWS:Region"];
                 var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
