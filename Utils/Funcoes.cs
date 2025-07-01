@@ -100,23 +100,9 @@ namespace authentication_jwt.Utils
             {
                 var accessKey = _configuration["AWS:AccessKey"];
                 var secretKey = _configuration["AWS:SecretKey"];
-                
-                // Adicione logs para depuração
-                Console.WriteLine($"AccessKey: {accessKey}");
-                Console.WriteLine($"SecretKey: {secretKey}");
-
-                var _accessKey = _configuration["AWS__AccessKey"];
-                var _secretKey = _configuration["AWS__SecretKey"];
-
-                // Adicione logs para depuração
-                Console.WriteLine($"_AccessKey: {_accessKey}");
-                Console.WriteLine($"_SecretKey: {_secretKey}");
-
                 var bucketName = _configuration["AWS:BucketName"];
                 var region = _configuration["AWS:Region"];
                 var fileName = $"uploads/{tipo}/{Guid.NewGuid()}";
-
-                Console.WriteLine("AWS Log", accessKey, secretKey, bucketName, region, fileName);
 
                 // Remove o prefixo data:image/png;base64, se existir
                 var base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
