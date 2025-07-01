@@ -30,4 +30,8 @@ public partial class Usuario
     public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
 
     public virtual ICollection<Paciente> Pacientes { get; } = new List<Paciente>();
+
+    public virtual ICollection<Solicitaco> SolicitacoUsuarioAnalises { get; } = new List<Solicitaco>();
+
+    public virtual ICollection<Solicitaco> SolicitacoUsuarioSolicitacaos { get; } = new List<Solicitaco>();
 }

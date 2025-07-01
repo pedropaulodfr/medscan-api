@@ -21,6 +21,8 @@ public partial class Medicamento
 
     public bool? Inativo { get; set; }
 
+    public bool? Solicitado { get; set; }
+
     public virtual ICollection<CartaoControle> CartaoControles { get; } = new List<CartaoControle>();
 
     public virtual ICollection<Receituario> Receituarios { get; } = new List<Receituario>();

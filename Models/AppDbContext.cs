@@ -27,6 +27,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Setup> Setups { get; set; }
 
+    public virtual DbSet<Solicitaco> Solicitacoes { get; set; }
+
     public virtual DbSet<TipoMedicamento> TipoMedicamentos { get; set; }
 
     public virtual DbSet<Unidade> Unidades { get; set; }
@@ -260,6 +262,50 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("URLWeb");
+        });
+
+        modelBuilder.Entity<Solicitaco>(entity =>
+        {
+            entity.Property(e => e.Concentracao)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.DataHoraAnalise).HasColumnType("datetime");
+            entity.Property(e => e.DataHoraSolicitacao).HasColumnType("datetime");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Identificacao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.PacienteId).HasColumnName("Paciente_Id");
+            entity.Property(e => e.TipoMedicamentoId).HasColumnName("TipoMedicamento_Id");
+            entity.Property(e => e.UnidadeId).HasColumnName("Unidade_Id");
+            entity.Property(e => e.UsuarioAnaliseId).HasColumnName("UsuarioAnalise_Id");
+            entity.Property(e => e.UsuarioSolicitacaoId).HasColumnName("UsuarioSolicitacao_Id");
+
+            entity.HasOne(d => d.Paciente).WithMany(p => p.Solicitacos)
+                .HasForeignKey(d => d.PacienteId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitacoes_Pacientes");
+
+            entity.HasOne(d => d.TipoMedicamento).WithMany(p => p.Solicitacos)
+                .HasForeignKey(d => d.TipoMedicamentoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitacoes_TipoMedicamento1");
+
+            entity.HasOne(d => d.Unidade).WithMany(p => p.Solicitacos)
+                .HasForeignKey(d => d.UnidadeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitacoes_Unidades1");
+
+            entity.HasOne(d => d.UsuarioAnalise).WithMany(p => p.SolicitacoUsuarioAnalises)
+                .HasForeignKey(d => d.UsuarioAnaliseId)
+                .HasConstraintName("FK_Solicitacoes_Usuarios1");
+
+            entity.HasOne(d => d.UsuarioSolicitacao).WithMany(p => p.SolicitacoUsuarioSolicitacaos)
+                .HasForeignKey(d => d.UsuarioSolicitacaoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitacoes_Usuarios");
         });
 
         modelBuilder.Entity<TipoMedicamento>(entity =>

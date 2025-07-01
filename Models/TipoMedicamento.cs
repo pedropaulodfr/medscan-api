@@ -14,4 +14,6 @@ public partial class TipoMedicamento
     public virtual ICollection<Medicamento> Medicamentos { get; } = new List<Medicamento>();
 
     public virtual ICollection<Receituario> Receituarios { get; } = new List<Receituario>();
+
+    public virtual ICollection<Solicitaco> Solicitacos { get; } = new List<Solicitaco>();
 }

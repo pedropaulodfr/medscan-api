@@ -109,6 +109,7 @@ namespace authentication_jwt.Services
                     Concentracao = model.Concentracao,
                     UnidadeId = model.UnidadeId,
                     Associacao = model.Associacao,
+                    Solicitado = model.Solicitado,
                     Inativo = model.Status == "Inativo" ? true : false,
                 };
 

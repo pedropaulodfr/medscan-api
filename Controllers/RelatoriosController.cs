@@ -32,6 +32,7 @@ namespace authentication_jwt.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route("relatorioReceituario/{pacienteId}")]
         public async Task<ActionResult> RelatorioReceituario(long pacienteId)

@@ -96,6 +96,7 @@ builder.Services.AddScoped<SetupService>();
 builder.Services.AddScoped<NotificacoesService>();
 builder.Services.AddScoped<RelatoriosService>();
 builder.Services.AddScoped<LogsService>();
+builder.Services.AddScoped<SolicitacoesService>();
 builder.Services.AddScoped<Funcoes>();
 builder.Services.AddHostedService<ProcessamentoNotificacoesService>();
 

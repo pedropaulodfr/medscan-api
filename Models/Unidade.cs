@@ -12,4 +12,6 @@ public partial class Unidade
     public string? Descricao { get; set; }
 
     public virtual ICollection<Medicamento> Medicamentos { get; } = new List<Medicamento>();
+
+    public virtual ICollection<Solicitaco> Solicitacos { get; } = new List<Solicitaco>();
 }
