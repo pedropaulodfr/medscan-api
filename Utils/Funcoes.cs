@@ -138,6 +138,8 @@ namespace authentication_jwt.Utils
                 return semBg;
             }, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
+            html = html.Replace("??", "🟢");
+
             return html;
         }
     }
