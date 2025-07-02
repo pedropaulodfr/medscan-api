@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using authentication_jwt.DTO;
 using authentication_jwt.Models;
@@ -86,7 +87,7 @@ namespace authentication_jwt.Services
                     foreach (var usuario in usuarios)
                     {
                         string nome = usuario.Nome;
-                        string email = usuario.Email;
+                        string email = $"{usuario.Email},{usuario.Email2}";
                         string medicamento = usuario.Medicamento;
                         string dataRetorno = usuario.DataRetorno.ToString("dd/MM/yyyy");
 
@@ -94,17 +95,28 @@ namespace authentication_jwt.Services
                             .Replace("{NOME}", nome)
                             .Replace("{MEDICAMENTO}", medicamento)
                             .Replace("{DATARETORNO}", dataRetorno);
-                            
-                        await emailService.SendEmail(email, titulo, body);
-                        if (!string.IsNullOrEmpty(usuario.Email2))
-                            await emailService.SendEmail(usuario.Email2, titulo, body);
-                            
+
+                        MailMessage emailEnviado = await emailService.SendEmail(email, titulo, body);
+
                         var usuarioNotificacao = await dbContext.Notificacoes.Where(x => x.Id == usuario.Notificacao_Id).FirstOrDefaultAsync();
                         if (usuarioNotificacao != null)
                         {
                             usuarioNotificacao.Enviado = true;
                             await dbContext.SaveChangesAsync();
                         }
+
+                        var detalhesNotificacao = new NotificacoesDetalhe
+                        {
+                            DataHoraEnvio = DateTime.Now,
+                            NotificacoesId = usuarioNotificacao.Id,
+                            TituloEnviado = titulo,
+                            AssuntoEnviado = emailEnviado.Body,
+                            EnderecosEnviados = email,
+                            EmailId = usuarioNotificacao.EmailId
+                        };
+
+                        await dbContext.AddAsync(detalhesNotificacao);
+                        await dbContext.SaveChangesAsync();
                     }
                 }
                 else

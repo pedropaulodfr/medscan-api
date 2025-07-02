@@ -19,5 +19,7 @@ public partial class Email
 
     public bool? Ativo { get; set; }
 
+    public virtual ICollection<NotificacoesDetalhe> NotificacoesDetalhes { get; } = new List<NotificacoesDetalhe>();
+
     public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
 }

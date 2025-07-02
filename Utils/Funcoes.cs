@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Transfer;
@@ -92,7 +93,7 @@ namespace authentication_jwt.Utils
                 return "";
             }
         }
-        
+
         public async Task<string> UploadFileAsync(string base64, string tipo)
         {
             // tipo: fotos, documentos
@@ -120,6 +121,24 @@ namespace authentication_jwt.Utils
             {
                 throw new Exception(ex.Message ?? ex.InnerException.ToString());
             }
+        }
+        
+        public string RemoverClassesHTML(string html)
+        {
+            // Remove a classe .container { ... }
+            var container = @"\.container\s*\{[^}]*\}";
+            html = Regex.Replace(html, container, string.Empty, RegexOptions.Multiline);
+
+            // Remove o atributo background-color de body { ... }
+            var bodyBg = @"(body\s*\{[^}]*?)background-color\s*:\s*[^;]+;?";
+            html = Regex.Replace(html, bodyBg, m =>
+            {
+                // Remove apenas o background-color, mantendo o restante do conteúdo
+                var semBg = Regex.Replace(m.Value, @"background-color\s*:\s*[^;]+;?", string.Empty, RegexOptions.IgnoreCase);
+                return semBg;
+            }, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            return html;
         }
     }
 }

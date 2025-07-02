@@ -100,7 +100,7 @@ namespace authentication_jwt.Services
             }
         }
 
-        public async Task SendEmail(string toEmail, string titulo, string body)
+        public async Task<MailMessage> SendEmail(string toEmail, string titulo, string body)
         {
             try
             {
@@ -126,9 +126,14 @@ namespace authentication_jwt.Services
                         IsBodyHtml = true
                     };
 
-                    mailMessage.To.Add(toEmail);
+                    foreach (var email in toEmail.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        mailMessage.To.Add(email.Trim());
+                    }
 
                     await smtpClient.SendMailAsync(mailMessage);
+
+                    return mailMessage;
                 }
             }
             catch (Exception ex)

@@ -42,8 +42,10 @@ namespace authentication_jwt.DTO
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Email2 { get; set; }
+        public string Assunto { get; set; }
         public string? Tipo { get; set; }
         public string? Titulo { get; set; }
         public bool? Lido { get; set; }
+        public NotificacoesDetalhesDTO NotificacaoDetalhes { get; set; }
     }
 }

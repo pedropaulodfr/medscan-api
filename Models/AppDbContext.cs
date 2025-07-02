@@ -21,6 +21,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Notificaco> Notificacoes { get; set; }
 
+    public virtual DbSet<NotificacoesDetalhe> NotificacoesDetalhes { get; set; }
+
     public virtual DbSet<Paciente> Pacientes { get; set; }
 
     public virtual DbSet<Receituario> Receituarios { get; set; }
@@ -147,6 +149,29 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Usuario).WithMany(p => p.Notificacos)
                 .HasForeignKey(d => d.UsuarioId)
                 .HasConstraintName("FK_Notificacoes_Usuarios1");
+        });
+
+        modelBuilder.Entity<NotificacoesDetalhe>(entity =>
+        {
+            entity.Property(e => e.AssuntoEnviado).HasColumnType("text");
+            entity.Property(e => e.DataHoraEnvio).HasColumnType("datetime");
+            entity.Property(e => e.EmailId).HasColumnName("Email_Id");
+            entity.Property(e => e.EnderecosEnviados)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.NotificacoesId).HasColumnName("Notificacoes_Id");
+            entity.Property(e => e.TituloEnviado)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Email).WithMany(p => p.NotificacoesDetalhes)
+                .HasForeignKey(d => d.EmailId)
+                .HasConstraintName("FK_NotificacoesDetalhes_Emails1");
+
+            entity.HasOne(d => d.Notificacoes).WithMany(p => p.NotificacoesDetalhes)
+                .HasForeignKey(d => d.NotificacoesId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_NotificacoesDetalhes_Notificacoes1");
         });
 
         modelBuilder.Entity<Paciente>(entity =>

@@ -27,6 +27,8 @@ public partial class Notificaco
 
     public virtual Email Email { get; set; } = null!;
 
+    public virtual ICollection<NotificacoesDetalhe> NotificacoesDetalhes { get; } = new List<NotificacoesDetalhe>();
+
     public virtual Paciente? Paciente { get; set; }
 
     public virtual Usuario? Usuario { get; set; }
