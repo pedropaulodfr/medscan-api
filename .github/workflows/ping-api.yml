@@ -1,0 +1,14 @@
+name: Ping API Render
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # A cada 15 minutos (UTC)
+  workflow_dispatch:        # Permite executar manualmente também
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Requisição para manter API ativa
+        run: |
+          curl -s https://sua-api.onrender.com/ping> /dev/null
