@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Requisição para manter API ativa
         run: |
-          curl -s https://sua-api.onrender.com/ping> /dev/null
+          curl -s https://medscan-api-ujft.onrender.com/ping > /dev/null
