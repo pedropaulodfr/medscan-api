@@ -72,6 +72,16 @@ namespace authentication_jwt.Services
         {
             try
             {
+                var existMedicamento = await _dbContext.Medicamentos.Where(x =>
+                    x.Identificacao == model.Identificacao &&
+                    x.TipoMedicamentoId == model.TipoMedicamentoId &&
+                    x.Concentracao == model.Concentracao &&
+                    x.UnidadeId == model.UnidadeId
+                ).AsNoTracking().FirstOrDefaultAsync();
+
+                if (existMedicamento != null)
+                    throw new ArgumentException("Não é possível solicitar um medicamento que já está cadastrado!");
+
                 Solicitaco solicitacao = new Solicitaco
                 {
                     DataHoraSolicitacao = DateTime.Now,
@@ -103,6 +113,9 @@ namespace authentication_jwt.Services
                 var solicitacao = await _dbContext.Solicitacoes.Where(x => x.Id == SolicitacaoId).FirstOrDefaultAsync();
                 if (solicitacao == null)
                     throw new ArgumentException("Solicitação inexistente!");
+
+                if (solicitacao.Aprovado == true)
+                    throw new ArgumentException("Não foi possível realizar a análise, pois esta solicitação já foi aprovada!");
 
                 solicitacao.DataHoraAnalise = DateTime.Now;
                 solicitacao.UsuarioAnaliseId = _acesso.UsuarioId;

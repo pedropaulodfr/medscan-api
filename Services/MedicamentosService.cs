@@ -98,8 +98,15 @@ namespace authentication_jwt.Services
         {
             try
             {
-                if (model.Id != 0)
-                    throw new ArgumentException("Erro ao salvar, o medicamento já existe!");
+                var existMedicamento = await _dbContext.Medicamentos.Where(x =>
+                    x.Identificacao == model.Identificacao &&
+                    x.TipoMedicamentoId == model.TipoMedicamentoId &&
+                    x.Concentracao == model.Concentracao &&
+                    x.UnidadeId == model.UnidadeId
+                ).AsNoTracking().FirstOrDefaultAsync();
+
+                if (model.Id != 0 || existMedicamento != null)
+                    throw new ArgumentException("Não foi possível salvar, pois o medicamento já existe!");
 
                 Medicamento medicamento = new Medicamento()
                 {
