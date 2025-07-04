@@ -26,6 +26,7 @@ namespace authentication_jwt.Services
                 Urlweb = x.Urlweb,
                 CaminhoArquivos = x.CaminhoArquivos,
                 UsarCodigoCadastro = x.UsarCodigoCadastro,
+                AnaliseAutomatica = x.AnaliseAutomatica,
                 DiasNotificacaoRetorno = x.DiasNotificacaoRetorno,
                 SmtpHost = x.SmtpHost,
                 SmtpPort = x.SmtpPort,
@@ -80,7 +81,8 @@ namespace authentication_jwt.Services
                     setup.Urlapi,
                     setup.CaminhoArquivos,
                     setup.DiasNotificacaoRetorno,
-                    setup.UsarCodigoCadastro
+                    setup.UsarCodigoCadastro,
+                    setup.AnaliseAutomatica
                 });
                 
                 setup.Urlweb = model.Urlweb;
@@ -88,6 +90,7 @@ namespace authentication_jwt.Services
                 setup.CaminhoArquivos = model.CaminhoArquivos;
                 setup.DiasNotificacaoRetorno = model.DiasNotificacaoRetorno;
                 setup.UsarCodigoCadastro = model.UsarCodigoCadastro;
+                setup.AnaliseAutomatica = model.AnaliseAutomatica;
 
                 await _dbContext.SaveChangesAsync();
 

@@ -82,6 +82,8 @@ namespace authentication_jwt.Services
                 if (existMedicamento != null)
                     throw new ArgumentException("Não é possível solicitar um medicamento que já está cadastrado!");
 
+                Setup setup = await _dbContext.Setups.FirstOrDefaultAsync();
+
                 Solicitaco solicitacao = new Solicitaco
                 {
                     DataHoraSolicitacao = DateTime.Now,
@@ -97,6 +99,10 @@ namespace authentication_jwt.Services
 
                 await _dbContext.AddAsync(solicitacao);
                 await _dbContext.SaveChangesAsync();
+
+                // Realizada a aprovação automática, caso esteja habilitada no setup
+                if (setup.AnaliseAutomatica == true)
+                    await AnaliseSolicitacao(solicitacao.Id, true);
 
                 return model;
             }

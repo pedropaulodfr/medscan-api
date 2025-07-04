@@ -2,7 +2,7 @@ name: Ping API Render
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # A cada 15 minutos (UTC)
+    - cron: '*/120 * * * *'  # A cada 2 horas (UTC)
   workflow_dispatch:        # Permite executar manualmente também
 
 jobs:

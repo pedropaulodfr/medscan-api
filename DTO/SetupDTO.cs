@@ -13,6 +13,7 @@ namespace authentication_jwt.DTO
         public string? CaminhoArquivos { get; set; }
 
         public bool? UsarCodigoCadastro { get; set; }
+        public bool? AnaliseAutomatica { get; set; }
         
         public string? SmtpHost { get; set; }
 

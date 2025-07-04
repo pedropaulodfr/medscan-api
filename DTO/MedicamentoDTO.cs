@@ -19,5 +19,6 @@ namespace authentication_jwt.DTO
         public bool? Inativo { get; set; }
         public bool? Solicitado { get; set; }
         public string? Status { get; set; }
+        public string? SolicitadoString { get; set; }
     }
 }

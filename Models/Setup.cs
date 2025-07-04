@@ -24,4 +24,6 @@ public partial class Setup
     public bool? UsarCodigoCadastro { get; set; }
 
     public int? DiasNotificacaoRetorno { get; set; }
+
+    public bool? AnaliseAutomatica { get; set; }
 }

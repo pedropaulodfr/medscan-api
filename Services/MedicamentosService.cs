@@ -39,7 +39,9 @@ namespace authentication_jwt.Services
                     TipoMedicamentoId = m.TipoMedicamentoId,
                     Associacao = m.Associacao,
                     Inativo = m.Inativo,
-                    Status = m.Inativo == true ? "Inativo" : "Ativo"
+                    Status = m.Inativo == true ? "Inativo" : "Ativo",
+                    Solicitado = m.Solicitado,
+                    SolicitadoString = m.Solicitado == true ? "Sim" : "Não"
                 }).ToList();
 
                 return retorno;
@@ -81,7 +83,9 @@ namespace authentication_jwt.Services
                         Unidade = x.Medicamento.Unidade.Identificacao,
                         Associacao = x.Medicamento.Associacao,
                         Inativo = x.Medicamento.Inativo.GetValueOrDefault(false),
-                        Status = x.Medicamento.Inativo.GetValueOrDefault(false) ? "Inativo" : "Ativo"
+                        Status = x.Medicamento.Inativo.GetValueOrDefault(false) ? "Inativo" : "Ativo",
+                        Solicitado = x.Medicamento.Solicitado,
+                        SolicitadoString = x.Medicamento.Solicitado == true ? "Sim" : "Não"
                     };
 
                     medicamentos.Add(_medicamento);
