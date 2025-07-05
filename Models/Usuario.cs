@@ -34,4 +34,6 @@ public partial class Usuario
     public virtual ICollection<Solicitaco> SolicitacoUsuarioAnalises { get; } = new List<Solicitaco>();
 
     public virtual ICollection<Solicitaco> SolicitacoUsuarioSolicitacaos { get; } = new List<Solicitaco>();
+
+    public virtual ICollection<Tratamento> Tratamentos { get; } = new List<Tratamento>();
 }

@@ -33,6 +33,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TipoMedicamento> TipoMedicamentos { get; set; }
 
+    public virtual DbSet<Tratamento> Tratamentos { get; set; }
+
+    public virtual DbSet<TratamentoReceituario> TratamentoReceituarios { get; set; }
+
     public virtual DbSet<Unidade> Unidades { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
@@ -343,6 +347,61 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Identificacao)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Tratamento>(entity =>
+        {
+            entity.Property(e => e.Cid)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CID");
+            entity.Property(e => e.DataFim).HasColumnType("date");
+            entity.Property(e => e.DataHoraCadastro).HasColumnType("datetime");
+            entity.Property(e => e.DataInicio).HasColumnType("date");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.Identificacao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Observacao).HasColumnType("text");
+            entity.Property(e => e.PacienteId).HasColumnName("Paciente_Id");
+            entity.Property(e => e.Patologia)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ProfissionalResponsavel)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(9)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioCadastroId).HasColumnName("UsuarioCadastro_Id");
+
+            entity.HasOne(d => d.Paciente).WithMany(p => p.Tratamentos)
+                .HasForeignKey(d => d.PacienteId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Tratamentos_Pacientes1");
+
+            entity.HasOne(d => d.UsuarioCadastro).WithMany(p => p.Tratamentos)
+                .HasForeignKey(d => d.UsuarioCadastroId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Tratamentos_Usuarios");
+        });
+
+        modelBuilder.Entity<TratamentoReceituario>(entity =>
+        {
+            entity.Property(e => e.ReceituarioId).HasColumnName("Receituario_Id");
+            entity.Property(e => e.TratamentoId).HasColumnName("Tratamento_Id");
+
+            entity.HasOne(d => d.Receituario).WithMany(p => p.TratamentoReceituarios)
+                .HasForeignKey(d => d.ReceituarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TratamentoReceituarios_Receituario");
+
+            entity.HasOne(d => d.Tratamento).WithMany(p => p.TratamentoReceituarios)
+                .HasForeignKey(d => d.TratamentoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TratamentoReceituarios_Tratamentos");
         });
 
         modelBuilder.Entity<Unidade>(entity =>

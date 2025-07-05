@@ -27,4 +27,6 @@ public partial class Receituario
     public virtual Medicamento Medicamento { get; set; } = null!;
 
     public virtual TipoMedicamento TipoMedicamento { get; set; } = null!;
+
+    public virtual ICollection<TratamentoReceituario> TratamentoReceituarios { get; } = new List<TratamentoReceituario>();
 }
