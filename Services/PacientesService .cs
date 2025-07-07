@@ -13,18 +13,29 @@ namespace authentication_jwt.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly EmailService _emailService;
+        private readonly TratamentosService _tratamentoService;
+        private readonly CartaoControleService _cartaoControleService;
+        private readonly ReceituarioService _receituarioService;
 
-        public PacientesService(AppDbContext dbContext, EmailService emailService)
+        public PacientesService(AppDbContext dbContext, EmailService emailService, TratamentosService tratamentosService, CartaoControleService cartaoControleService, ReceituarioService receituarioService)
         {
             _dbContext = dbContext;
             _emailService = emailService;
+            _tratamentoService = tratamentosService;
+            _cartaoControleService = cartaoControleService;
+            _receituarioService = receituarioService;
         }
 
         public async Task<PacienteDTO> Get(long Id)
         {
             try
             {
-                var paciente = await _dbContext.Pacientes.Where(x => x.UsuariosId == Id && x.Deletado != true).FirstOrDefaultAsync();
+                var paciente = await _dbContext.Pacientes
+                    .Include(x => x.Usuarios)
+                    .Include(x => x.CartaoControles)
+                    .Include(x => x.Tratamentos)
+                    .Where(x => x.UsuariosId == Id && x.Deletado != true)
+                    .AsNoTracking().FirstOrDefaultAsync();
 
                 if (paciente == null)
                     throw new ArgumentException("Paciente não localizado!");
@@ -46,7 +57,10 @@ namespace authentication_jwt.Services
                     Cep = paciente.Cep,
                     Cns = paciente.Cns,
                     PlanoSaude = paciente.PlanoSaude,
-                    UsuariosId = paciente.UsuariosId
+                    UsuariosId = paciente.UsuariosId,
+                    CartaoControle = await _cartaoControleService.Get(paciente.Id),
+                    Tratamentos = await _tratamentoService.Get(paciente.Id),
+                    Receituarios = await _receituarioService.Get(paciente.Id)
                 };
 
                 return retorno;
@@ -60,7 +74,12 @@ namespace authentication_jwt.Services
 
         public async Task<List<PacienteDTO>> GetAll()
         {
-            List<Paciente> pacientes = await _dbContext.Pacientes.Include(x => x.Usuarios).Where(x => x.Deletado != true).AsNoTracking().ToListAsync();
+            List<Paciente> pacientes = await _dbContext.Pacientes
+                .Include(x => x.Usuarios)
+                .Include(x => x.CartaoControles)
+                .Include(x => x.Tratamentos)
+                .Where(x => x.Deletado != true)
+                .AsNoTracking().ToListAsync();
 
             var retorno = pacientes.Select(x => new PacienteDTO
             {
@@ -134,7 +153,7 @@ namespace authentication_jwt.Services
                         Cep = model.Cep,
                         Cns = model.Cns,
                         PlanoSaude = model.PlanoSaude,
-                        UsuariosId = model.UsuariosId,
+                        UsuariosId = model.UsuariosId.GetValueOrDefault(),
                         Usuarios = usuario
                     };
 
