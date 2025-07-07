@@ -12,6 +12,7 @@ namespace authentication_jwt.DTO
         public DateTime? DataHoraCadastro { get; set; }
         public long? UsuarioCadastroId { get; set; }
         public long? PacienteId { get; set; }
+        public string? Paciente { get; set; }
         public string Identificacao { get; set; }
         public string? Descricao { get; set; }
         public string? Observacao { get; set; }

@@ -20,6 +20,19 @@ namespace authentication_jwt.Controllers
             _tratamentosService = tratamentosService;
         }
 
+        [HttpGet]
+        [Route("{PacienteId?}")]
+        public async Task<ActionResult> Get(long? PacienteId)
+        {
+            try
+            {
+                return StatusCode(200, await _tratamentosService.Get(PacienteId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         [HttpPost]
         public async Task<ActionResult> Insert(TratamentosDTO model)
         {
@@ -34,6 +47,7 @@ namespace authentication_jwt.Controllers
         }
 
         [HttpPut]
+        [Route("update")]
         public async Task<ActionResult> Update(TratamentosDTO model)
         {
             try

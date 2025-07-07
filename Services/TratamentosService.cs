@@ -19,13 +19,65 @@ namespace authentication_jwt.Services
             _acesso = acesso;
         }
 
+        public async Task<List<TratamentosDTO>> Get(long? PacienteId)
+        {
+            var tratamentos = await _dbContext.Tratamentos
+            .Include(x => x.Paciente)
+            .Include(x => x.TratamentoReceituarios)
+                .ThenInclude(y => y.Receituario)
+                .ThenInclude(z => z.Medicamento)
+                .ThenInclude(z => z.TipoMedicamento)
+            .Where(x => x.Status != "Deletado" && ((PacienteId == null || PacienteId == 0) || x.PacienteId == PacienteId)
+            ).AsNoTracking().Select(x => new TratamentosDTO
+            {
+                Id = x.Id,
+                DataHoraCadastro = x.DataHoraCadastro,
+                PacienteId = x.PacienteId,
+                Paciente = x.Paciente.NomeCompleto,
+                Identificacao = x.Identificacao,
+                Descricao = x.Descricao,
+                Observacao = x.Observacao,
+                Patologia = x.Patologia,
+                Cid = x.Cid,
+                ProfissionalResponsavel = x.ProfissionalResponsavel,
+                DataInicio = x.DataInicio,
+                DataFim = x.DataFim,
+                Status = x.Status,
+                receituarios = x.TratamentoReceituarios.Select(r => new ReceituarioDTO
+                {
+                    Id = r.Receituario.Id,
+                    Frequencia = r.Receituario.Frequencia,
+                    Tempo = r.Receituario.Tempo,
+                    Periodo = r.Receituario.Periodo,
+                    Dose = r.Receituario.Dose,
+                    Medicamento = new MedicamentoDTO
+                    {
+                        Id = r.Receituario.Medicamento.Id,
+                        Identificacao = r.Receituario.Medicamento.Identificacao,
+                        Descricao = r.Receituario.Medicamento.Descricao,
+                        Concentracao = r.Receituario.Medicamento.Concentracao,
+                        TipoMedicamentoId = r.Receituario.Medicamento.TipoMedicamentoId,
+                        TipoMedicamento = r.Receituario.Medicamento.TipoMedicamento.Identificacao,
+                        UnidadeId = r.Receituario.Medicamento.UnidadeId,
+                        Unidade = r.Receituario.Medicamento.Unidade.Identificacao,
+                        Associacao = r.Receituario.Medicamento.Associacao,
+                        Inativo = r.Receituario.Medicamento.Inativo,
+                        Solicitado = r.Receituario.Medicamento.Solicitado,
+                        SolicitadoString = r.Receituario.Medicamento.Solicitado == true ? "Sim" : "Não"
+                    }
+                }).ToList()
+            }).ToListAsync();
+
+            return tratamentos;
+        }
+
         public async Task<TratamentosDTO> Insert(TratamentosDTO model)
         {
             try
             {
-                Tratamento existTratamento = await _dbContext.Tratamentos.Where(x => x.Identificacao == model.Identificacao && x.PacienteId == _acesso.PacienteId.Value).FirstOrDefaultAsync();
+                Tratamento existTratamento = await _dbContext.Tratamentos.Where(x => x.Identificacao == model.Identificacao && x.PacienteId == _acesso.PacienteId.GetValueOrDefault()).FirstOrDefaultAsync();
                 if (existTratamento != null)
-                    throw new ArgumentException("Este medicamento já foi cadastrado para o paciente");
+                    throw new ArgumentException("Este tratamento já foi cadastrado para o paciente");
 
                 Tratamento tratamento = new Tratamento
                 {
