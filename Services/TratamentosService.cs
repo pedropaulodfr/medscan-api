@@ -83,7 +83,7 @@ namespace authentication_jwt.Services
                 {
                     DataHoraCadastro = DateTime.Now,
                     UsuarioCadastroId = _acesso.UsuarioId,
-                    PacienteId = _acesso.PacienteId.Value,
+                    PacienteId = model.PacienteId.HasValue ? model.PacienteId.Value : _acesso.PacienteId.Value,
                     Identificacao = model.Identificacao,
                     Descricao = model.Descricao,
                     Observacao = model.Observacao,

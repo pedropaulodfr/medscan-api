@@ -66,7 +66,7 @@ namespace authentication_jwt.Services
                                                 .Include(x => x.Medicamento)
                                                 .ThenInclude(y => y.Unidade)
                                                 .Include(x => x.TipoMedicamento)
-                                                .Where(x => x.PacienteId == _acesso.PacienteId && x.Medicamento.Inativo != true)
+                                                .Where(x => x.PacienteId == PacienteId && x.Medicamento.Inativo != true)
                                                 .AsNoTracking().ToListAsync();
 
                 receituario.ForEach(x => 
@@ -164,10 +164,15 @@ namespace authentication_jwt.Services
         {
             try
             {
-                var medicamento = await _dbContext.Medicamentos.Include(x => x.Receituarios).Where(m => m.Id == id).FirstOrDefaultAsync();
+                var medicamento = await _dbContext.Medicamentos
+                    .Include(x => x.Receituarios)
+                    .Include(x => x.CartaoControles)
+                    .Where(m => m.Id == id).FirstOrDefaultAsync();
                 if (medicamento == null)
                     throw new Exception("Erro ao deletar, o medicamento não existe!");
 
+                _dbContext.RemoveRange(medicamento.CartaoControles);
+                _dbContext.RemoveRange(medicamento.Receituarios.SelectMany(r => r.TratamentoReceituarios));
                 _dbContext.RemoveRange(medicamento.Receituarios);
                 _dbContext.Remove(medicamento);
                 await _dbContext.SaveChangesAsync();
