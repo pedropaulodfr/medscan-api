@@ -14,7 +14,7 @@ namespace authentication_jwt.DTO
 
         public bool? UsarCodigoCadastro { get; set; }
         public bool? AnaliseAutomatica { get; set; }
-        
+
         public string? SmtpHost { get; set; }
 
         public string? SmtpPort { get; set; }
@@ -23,5 +23,9 @@ namespace authentication_jwt.DTO
 
         public string? SmtpPassword { get; set; }
         public int? DiasNotificacaoRetorno { get; set; }
+        public bool? PacienteAutocadastro { get; set; }
+        public bool? PacienteCadastraReceituario { get; set; }
+        public bool? PacienteCadastraCartaoControle { get; set; }
+        public bool? PacienteCadastraTratamento { get; set; }
     }
 }

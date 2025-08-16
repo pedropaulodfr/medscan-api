@@ -56,6 +56,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Profissional)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.UsuarioCriacaoId).HasColumnName("UsuarioCriacao_Id");
 
             entity.HasOne(d => d.Medicamento).WithMany(p => p.CartaoControles)
                 .HasForeignKey(d => d.MedicamentoId)
@@ -66,6 +67,10 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.PacienteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartaoControle_Pacientes");
+
+            entity.HasOne(d => d.UsuarioCriacao).WithMany(p => p.CartaoControles)
+                .HasForeignKey(d => d.UsuarioCriacaoId)
+                .HasConstraintName("FK_CartaoControle_Usuarios");
         });
 
         modelBuilder.Entity<Email>(entity =>

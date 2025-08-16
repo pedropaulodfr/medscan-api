@@ -19,9 +19,13 @@ public partial class CartaoControle
 
     public long PacienteId { get; set; }
 
+    public long? UsuarioCriacaoId { get; set; }
+
     public virtual Medicamento Medicamento { get; set; } = null!;
 
     public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
 
     public virtual Paciente Paciente { get; set; } = null!;
+
+    public virtual Usuario? UsuarioCriacao { get; set; }
 }

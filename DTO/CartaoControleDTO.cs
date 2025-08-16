@@ -25,5 +25,6 @@ namespace authentication_jwt.DTO
         public string? Profissional { get; set; }
         public long? PacienteId { get; set; }
         public long? UsuarioId { get; set; }
+        public string? PerfilCadastro { get; set; }
     }
 }

@@ -46,7 +46,6 @@ namespace authentication_jwt.Controllers
             }
         }
 
-        [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         [Route("insert")]
         public async Task<ActionResult> Insert([FromBody] PacienteDTO model)

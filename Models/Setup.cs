@@ -26,4 +26,12 @@ public partial class Setup
     public int? DiasNotificacaoRetorno { get; set; }
 
     public bool? AnaliseAutomatica { get; set; }
+
+    public bool? PacienteAutocadastro { get; set; }
+
+    public bool? PacienteCadastraReceituario { get; set; }
+
+    public bool? PacienteCadastraCartaoControle { get; set; }
+
+    public bool? PacienteCadastraTratamento { get; set; }
 }

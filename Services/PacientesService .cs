@@ -135,13 +135,16 @@ namespace authentication_jwt.Services
                         Senha = Funcoes.GerarSenhaAleatoria()
                     };
 
+                    await _dbContext.AddAsync(usuario);
+                    await _dbContext.SaveChangesAsync();
+
                     Paciente paciente = new Paciente()    
                     {
                         Id = model.Id,
                         Nome = model.Nome,
                         NomeCompleto = model.NomeCompleto,
                         Email = model.Email.Trim(),
-                        Email2 = model.Email2.Trim(),
+                        Email2 = !string.IsNullOrEmpty(model.Email2) ? model.Email2.Trim() : "",
                         Cpf = model.Cpf.Replace(".", "").Replace("-", ""),
                         DataNascimento = model.DataNascimento,
                         Logradouro = model.Logradouro,
@@ -153,10 +156,9 @@ namespace authentication_jwt.Services
                         Cep = model.Cep,
                         Cns = model.Cns,
                         PlanoSaude = model.PlanoSaude,
-                        UsuariosId = model.UsuariosId.GetValueOrDefault(),
+                        UsuariosId = model.UsuariosId.HasValue ? model.UsuariosId.GetValueOrDefault() : usuario.Id,
                         Usuarios = usuario
                     };
-
 
                     await _dbContext.AddAsync(paciente);
                     await _dbContext.SaveChangesAsync();

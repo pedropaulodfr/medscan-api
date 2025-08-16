@@ -11,16 +11,19 @@ namespace authentication_jwt.Services
     public class CartaoControleService
     {
         private readonly AppDbContext _dbContext;
+        private readonly AcessoService _acessoService;
 
         // Construtor para injetar o AppDbContext
-        public CartaoControleService(AppDbContext dbContext)
+        public CartaoControleService(AppDbContext dbContext, AcessoService acessoService)
         {
             _dbContext = dbContext;
+            _acessoService = acessoService;
         }
 
         public async Task<List<CartaoControleDTO>> Get(long PacienteId)
         {
             var cartaoControle = await _dbContext.CartaoControles
+                                        .Include(x => x.UsuarioCriacao)
                                         .Include(x => x.Medicamento)
                                             .ThenInclude(y => y.Unidade)
                                         .Include(x => x.Medicamento)
@@ -40,7 +43,8 @@ namespace authentication_jwt.Services
                 TipoId = m.Medicamento.TipoMedicamento.Id,
                 Data = m.Data,
                 DataRetorno = m.DataRetorno,
-                Profissional = m.Profissional
+                Profissional = m.Profissional,
+                PerfilCadastro = m.UsuarioCriacao != null ? m.UsuarioCriacao.Perfil : ""
             })
             .OrderByDescending(x => x.Data).ToList();
 
@@ -49,6 +53,7 @@ namespace authentication_jwt.Services
         public async Task<List<CartaoControleDTO>> GetAll()
         {
             var cartaoControle = await _dbContext.CartaoControles
+                                        .Include(x => x.UsuarioCriacao)
                                         .Include(x => x.Medicamento)
                                         .ThenInclude(y => y.Unidade)
                                         .Include(x => x.Medicamento)
@@ -66,7 +71,8 @@ namespace authentication_jwt.Services
                 Tipo = m.Medicamento.TipoMedicamento.Identificacao,
                 Data = m.Data,
                 DataRetorno = m.DataRetorno,
-                Profissional = m.Profissional
+                Profissional = m.Profissional,
+                PerfilCadastro = m.UsuarioCriacao != null ? m.UsuarioCriacao.Perfil : ""
             })
             .OrderByDescending(x => x.Data).ToList();
 
@@ -88,7 +94,8 @@ namespace authentication_jwt.Services
                     Data = model.Data,
                     DataRetorno = model.DataRetorno,
                     Profissional = model.Profissional,
-                    PacienteId = paciente.Id
+                    PacienteId = paciente.Id,
+                    UsuarioCriacaoId = _acessoService.UsuarioId != 0 ? _acessoService.UsuarioId : paciente.UsuariosId,
                 };
 
                 await _dbContext.AddAsync(registro);

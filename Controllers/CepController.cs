@@ -19,7 +19,6 @@ namespace authentication_jwt.Controllers
             _cepService = cepService;
         }
 
-        [Authorize]
         [HttpGet]
         [Route("getEndereco/{CEP}")]
         public async Task<ActionResult> GetEndereco(string CEP)

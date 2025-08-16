@@ -49,5 +49,5 @@ public partial class Paciente
 
     public virtual ICollection<Tratamento> Tratamentos { get; } = new List<Tratamento>();
 
-    public virtual Usuario Usuarios { get; set; } = null!;
+    public virtual Usuario? Usuarios { get; set; } = null!;
 }

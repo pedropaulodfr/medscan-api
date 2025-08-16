@@ -27,6 +27,10 @@ namespace authentication_jwt.Services
                 CaminhoArquivos = x.CaminhoArquivos,
                 UsarCodigoCadastro = x.UsarCodigoCadastro,
                 AnaliseAutomatica = x.AnaliseAutomatica,
+                PacienteAutocadastro = x.PacienteAutocadastro,
+                PacienteCadastraReceituario = x.PacienteCadastraReceituario,
+                PacienteCadastraCartaoControle = x.PacienteCadastraCartaoControle,
+                PacienteCadastraTratamento = x.PacienteCadastraTratamento,
                 DiasNotificacaoRetorno = x.DiasNotificacaoRetorno,
                 SmtpHost = x.SmtpHost,
                 SmtpPort = x.SmtpPort,
@@ -82,7 +86,11 @@ namespace authentication_jwt.Services
                     setup.CaminhoArquivos,
                     setup.DiasNotificacaoRetorno,
                     setup.UsarCodigoCadastro,
-                    setup.AnaliseAutomatica
+                    setup.AnaliseAutomatica,
+                    setup.PacienteAutocadastro,
+                    setup.PacienteCadastraReceituario,
+                    setup.PacienteCadastraCartaoControle,
+                    setup.PacienteCadastraTratamento
                 });
                 
                 setup.Urlweb = model.Urlweb;
@@ -91,6 +99,10 @@ namespace authentication_jwt.Services
                 setup.DiasNotificacaoRetorno = model.DiasNotificacaoRetorno;
                 setup.UsarCodigoCadastro = model.UsarCodigoCadastro;
                 setup.AnaliseAutomatica = model.AnaliseAutomatica;
+                setup.PacienteAutocadastro = model.PacienteAutocadastro;
+                setup.PacienteCadastraReceituario = model.PacienteCadastraReceituario;
+                setup.PacienteCadastraCartaoControle = model.PacienteCadastraCartaoControle;
+                setup.PacienteCadastraTratamento = model.PacienteCadastraTratamento;
 
                 await _dbContext.SaveChangesAsync();
 
