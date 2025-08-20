@@ -40,6 +40,7 @@ namespace authentication_jwt.DTO
         public string? PlanoSaude { get; set; }
 
         public long? UsuariosId { get; set; }
+        public string? Hash { get; set; }
 
         public UsuarioDTO? Usuarios { get; set; }
         public List<CartaoControleDTO>? CartaoControle { get; set; }

@@ -16,7 +16,6 @@ namespace authentication_jwt.Controllers
             _pacientesService = pacientesService;
         }
 
-        [Authorize]
         [HttpGet]
         [Route("get/{Id}")]
         public async Task<ActionResult> Get(long Id)
@@ -24,6 +23,20 @@ namespace authentication_jwt.Controllers
             try
             {
                 return StatusCode(200,  await _pacientesService.Get(Id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex });
+            }
+        }
+
+        [HttpGet]
+        [Route("getByHash/{hash}")]
+        public async Task<ActionResult> Get(string hash)
+        {
+            try
+            {
+                return StatusCode(200,  await _pacientesService.Get(null, hash));
             }
             catch (Exception ex)
             {

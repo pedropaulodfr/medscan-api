@@ -215,6 +215,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Email2)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.Hash)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Logradouro)
                 .HasMaxLength(100)
                 .IsUnicode(false);

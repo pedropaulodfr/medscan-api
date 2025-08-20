@@ -41,6 +41,8 @@ public partial class Paciente
 
     public string? Email2 { get; set; }
 
+    public string Hash { get; set; } = null!;
+
     public virtual ICollection<CartaoControle> CartaoControles { get; } = new List<CartaoControle>();
 
     public virtual ICollection<Notificaco> Notificacos { get; } = new List<Notificaco>();
@@ -49,5 +51,5 @@ public partial class Paciente
 
     public virtual ICollection<Tratamento> Tratamentos { get; } = new List<Tratamento>();
 
-    public virtual Usuario? Usuarios { get; set; } = null!;
+    public virtual Usuario Usuarios { get; set; } = null!;
 }

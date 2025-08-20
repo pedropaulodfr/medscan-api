@@ -16,7 +16,6 @@ namespace authentication_jwt.Controllers
             _usuariosService = usuariosService;
         }
 
-        [Authorize]
         [HttpGet]
         [Route("get/{id}")]
         public async Task<ActionResult> Get(long id)

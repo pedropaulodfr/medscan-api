@@ -26,7 +26,7 @@ namespace authentication_jwt.Services
             _receituarioService = receituarioService;
         }
 
-        public async Task<PacienteDTO> Get(long Id)
+        public async Task<PacienteDTO> Get(long? Id, string? hash = null)
         {
             try
             {
@@ -34,7 +34,9 @@ namespace authentication_jwt.Services
                     .Include(x => x.Usuarios)
                     .Include(x => x.CartaoControles)
                     .Include(x => x.Tratamentos)
-                    .Where(x => x.UsuariosId == Id && x.Deletado != true)
+                    .Where(x => x.Deletado != true &&
+                        (Id.HasValue ? x.UsuariosId == Id.Value : x.Hash == hash)
+                    )
                     .AsNoTracking().FirstOrDefaultAsync();
 
                 if (paciente == null)
@@ -60,7 +62,8 @@ namespace authentication_jwt.Services
                     UsuariosId = paciente.UsuariosId,
                     CartaoControle = await _cartaoControleService.Get(paciente.Id),
                     Tratamentos = await _tratamentoService.Get(paciente.Id),
-                    Receituarios = await _receituarioService.Get(paciente.Id)
+                    Receituarios = await _receituarioService.Get(paciente.Id),
+                    Hash = paciente.Hash,
                 };
 
                 return retorno;
@@ -97,7 +100,7 @@ namespace authentication_jwt.Services
                 Cidade = x.Cidade,
                 Uf = x.Uf,
                 Cep = x.Cep,
-                Endereco = string.Format(@"{0}, {1}, {2}, {3}, {4}, {5}, {6}", x.Logradouro, x.Numero, x.Complemento, x.Bairro, x.Cidade, x.Uf, x.Cep ),
+                Endereco = string.Format(@"{0}, {1}, {2}, {3}, {4}, {5}, {6}", x.Logradouro, x.Numero, x.Complemento, x.Bairro, x.Cidade, x.Uf, x.Cep),
                 Cns = x.Cns,
                 PlanoSaude = x.PlanoSaude,
                 UsuariosId = x.UsuariosId,
@@ -111,7 +114,8 @@ namespace authentication_jwt.Services
                     CodigoCadastro = x.Usuarios.CodigoCadastro,
                     Ativo = x.Usuarios.Ativo ? "Ativo" : "Inativo",
                     Senha = x.Usuarios.Senha,
-                }
+                },
+                Hash = x.Hash,
             }).ToList();
 
             return retorno;
@@ -138,7 +142,7 @@ namespace authentication_jwt.Services
                     await _dbContext.AddAsync(usuario);
                     await _dbContext.SaveChangesAsync();
 
-                    Paciente paciente = new Paciente()    
+                    Paciente paciente = new Paciente()
                     {
                         Id = model.Id,
                         Nome = model.Nome,
@@ -157,7 +161,8 @@ namespace authentication_jwt.Services
                         Cns = model.Cns,
                         PlanoSaude = model.PlanoSaude,
                         UsuariosId = model.UsuariosId.HasValue ? model.UsuariosId.GetValueOrDefault() : usuario.Id,
-                        Usuarios = usuario
+                        Usuarios = usuario,
+                        Hash = Funcoes.GerarHashSHA256(""),
                     };
 
                     await _dbContext.AddAsync(paciente);
