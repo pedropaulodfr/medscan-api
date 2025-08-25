@@ -133,6 +133,7 @@ namespace authentication_jwt.Services
         }
 
         public async Task Delete(long id)
+
         {
             try
             {
@@ -140,7 +141,11 @@ namespace authentication_jwt.Services
                 if (registro == null)
                     throw new Exception("Erro ao deletar, o registro não existe!");
 
-                var notificacoesCartaoControle = await _dbContext.Notificacoes.Where(x => x.CartaoControleId == registro.Id).ToListAsync();
+                var notificacoesDetalhes = await _dbContext.NotificacoesDetalhes.Where(x => x.Notificacoes.CartaoControleId == id).ToListAsync();
+                if (notificacoesDetalhes.Count > 0)
+                    _dbContext.RemoveRange(notificacoesDetalhes);
+
+                var notificacoesCartaoControle = await _dbContext.Notificacoes.Include(x => x.NotificacoesDetalhes).Where(x => x.CartaoControleId == registro.Id).ToListAsync();
                 if (notificacoesCartaoControle.Count > 0)
                     _dbContext.RemoveRange(notificacoesCartaoControle);
 
