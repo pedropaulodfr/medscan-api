@@ -70,6 +70,43 @@ namespace authentication_jwt.Services
 
             return proximosAoRetorno;
         }
+        public async Task<List<CardsDashboardDTO>> GraficoDatasRetorno(long? PacienteId)
+        {
+            if (PacienteId == null || PacienteId == 0)
+                PacienteId = _acesso.PacienteId;
+
+            var dados = await _dbContext.CartaoControles
+                                            .Include(x => x.Medicamento)
+                                                .ThenInclude(y => y.Unidade)
+                                            .AsNoTracking()
+                                            .Where(x => x.PacienteId == PacienteId
+                                                    && x.Paciente.Deletado != true
+                                                    && x.Medicamento.Inativo != true)
+                                            .ToListAsync();
+
+            // Agrupa os dados por DataRetorno
+            var agrupadosPorDataRetorno = dados.GroupBy(x => x.DataRetorno)
+                                            .Select(grupo => new
+                                            {
+                                                DataRetorno = grupo.Key,
+                                                Medicamentos = grupo.ToList(),
+                                                Quantidade = grupo.Count()
+                                            })
+                                            .ToList();
+
+            var datasRetorno = agrupadosPorDataRetorno.SelectMany(grupo => grupo.Medicamentos.Select(medicamento => new CardsDashboardDTO
+            {
+                CartaoControleId = medicamento.Id,
+                DataRetorno = medicamento.DataRetorno,
+                Medicamento = string.Format("{0} {1} {2}", 
+                                            medicamento.Medicamento.Identificacao, 
+                                            medicamento.Medicamento.Concentracao, 
+                                            medicamento.Medicamento.Unidade.Identificacao),
+                Quantidade = grupo.Quantidade 
+            })).ToList();
+
+            return datasRetorno;
+        }
         public async Task<List<MedicamentoDTO>> CardQntMedicamentosPaciente(long? PacienteId)
         {
             if (PacienteId == null || PacienteId == 0)

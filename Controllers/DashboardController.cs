@@ -46,6 +46,21 @@ namespace authentication_jwt.Controllers
                 return BadRequest(new { mensagem = "Erro ao obter dados: " + ex });
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        [Route("datasRetorno/{PacienteId?}")]
+        public async Task<ActionResult> GraficoDatasRetorno(long PacienteId)
+        {
+            try
+            {
+                return StatusCode(200, await _dashboardService.GraficoDatasRetorno(PacienteId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = "Erro ao obter dados: " + ex });
+            }
+        }
         
         [Authorize]
         [HttpGet]
