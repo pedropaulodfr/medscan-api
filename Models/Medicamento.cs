@@ -25,6 +25,8 @@ public partial class Medicamento
 
     public virtual ICollection<CartaoControle> CartaoControles { get; } = new List<CartaoControle>();
 
+    public virtual ICollection<MovimentacoesEstoque> MovimentacoesEstoques { get; } = new List<MovimentacoesEstoque>();
+
     public virtual ICollection<Receituario> Receituarios { get; } = new List<Receituario>();
 
     public virtual TipoMedicamento TipoMedicamento { get; set; } = null!;

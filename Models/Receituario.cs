@@ -18,7 +18,7 @@ public partial class Receituario
     /// </summary>
     public string? Periodo { get; set; }
 
-    public int? Dose { get; set; }
+    public decimal? Dose { get; set; }
 
     public long TipoMedicamentoId { get; set; }
 

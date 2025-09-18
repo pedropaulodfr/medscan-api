@@ -8,6 +8,6 @@ namespace authentication_jwt.DTO.Dashboard
     public class EstoqueMedicamentosDashboardDTO
     {
         public string? Medicamento { get; set; }
-        public long? Quantidade { get; set; }
+        public decimal? Quantidade { get; set; }
     }
 }

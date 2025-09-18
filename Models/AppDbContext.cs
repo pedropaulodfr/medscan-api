@@ -19,6 +19,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Medicamento> Medicamentos { get; set; }
 
+    public virtual DbSet<MovimentacoesEstoque> MovimentacoesEstoques { get; set; }
+
     public virtual DbSet<Notificaco> Notificacoes { get; set; }
 
     public virtual DbSet<NotificacoesDetalhe> NotificacoesDetalhes { get; set; }
@@ -40,6 +42,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Unidade> Unidades { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
+
+    public virtual DbSet<VwEstoqueAtual> VwEstoqueAtuals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -129,6 +133,39 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Unidade).WithMany(p => p.Medicamentos)
                 .HasForeignKey(d => d.UnidadeId)
                 .HasConstraintName("FK_Medicamentos_Unidades");
+        });
+
+        modelBuilder.Entity<MovimentacoesEstoque>(entity =>
+        {
+            entity.ToTable("MovimentacoesEstoque");
+
+            entity.Property(e => e.DataMovimentacao).HasColumnType("datetime");
+            entity.Property(e => e.MedicamentoId).HasColumnName("Medicamento_Id");
+            entity.Property(e => e.Observacao)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.PacienteId).HasColumnName("Paciente_Id");
+            entity.Property(e => e.Quantidade).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.TipoMovimentacao)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.UsuarioId).HasColumnName("Usuario_Id");
+
+            entity.HasOne(d => d.Medicamento).WithMany(p => p.MovimentacoesEstoques)
+                .HasForeignKey(d => d.MedicamentoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MovimentacoesEstoque_Medicamentos1");
+
+            entity.HasOne(d => d.Paciente).WithMany(p => p.MovimentacoesEstoques)
+                .HasForeignKey(d => d.PacienteId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MovimentacoesEstoque_Pacientes");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.MovimentacoesEstoques)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MovimentacoesEstoque_Usuarios1");
         });
 
         modelBuilder.Entity<Notificaco>(entity =>
@@ -248,10 +285,11 @@ public partial class AppDbContext : DbContext
         {
             entity.ToTable("Receituario");
 
+            entity.Property(e => e.Dose).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.MedicamentoId).HasColumnName("Medicamento_Id");
             entity.Property(e => e.PacienteId).HasColumnName("Paciente_Id");
             entity.Property(e => e.Periodo)
-                .HasMaxLength(5)
+                .HasMaxLength(17)
                 .IsUnicode(false)
                 .HasComment("1 - Manhã; 2 - Tarde; 3 - Noite");
             entity.Property(e => e.Tempo)
@@ -440,6 +478,19 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Senha)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<VwEstoqueAtual>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_EstoqueAtual");
+
+            entity.Property(e => e.Identificacao)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.MedicamentoId).HasColumnName("Medicamento_Id");
+            entity.Property(e => e.QuantidadeAtual).HasColumnType("decimal(38, 2)");
         });
 
         OnModelCreatingPartial(modelBuilder);
